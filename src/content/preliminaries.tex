@@ -5,7 +5,7 @@
 
 
 
-\section{Modeling with graphs}
+\section{Modeling using graphs}
 
 Structural or behavioral modeling of systems are often done using graphs. .... \TODO{...}
 
@@ -30,9 +30,14 @@ In this thesis we use structural modeling to model the current state of the syst
 A graph pattern's purpose is to define a set of constraints that can be satisfied by the vertices of the graph.
 
 \section{Local search}
+\todo{ezt kidolgozni}
+
 
 Local search is an algorithm to provide matchings of a graph pattern in a graph.
 
-\subsection{Distributed local search}
+\section{Distributed platform}
 
-As models are stored on different computational units we still needs to find matches, that can span over multiple model parts. To find matches for a pattern local search algorithm is used in a distributed way. Search operations are being executed locally, and if the next operation needs to be executed on multiple nodes, the search context, (ie.\ the bound variables and the operations number) are sent to other computational units.
+% adatok diszjunkt halmazokra bontva különböző csomópontra
+% az algoritmusok is elosztottak, nem lesz összegyűjtve az infó, úgy van kiértékelve, hogy nincs aki mindent látna a rendszerből
+
+
