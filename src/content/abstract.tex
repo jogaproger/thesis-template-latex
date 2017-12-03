@@ -8,7 +8,12 @@
 %----------------------------------------------------------------------------
 \chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
 
-Napjainkban\dots{} \todo{TODO BEFEJEZNI}
+A technológia fejlődésével rohamosan jelennek meg a kiberfizikai rendszerek egyre több tradicionális területen is: a vasúti rendszerek, robot rendszerek megfigyelését egyre több szenzor végzi, autók egymással kommunikálnak, és gyakran már önvezető funkcióval is rendelkeznek. Jellemzője ezen rendszereknek, hogy nagy mennyiségű szenzor adatot kell feldolgozniuk, és a rendelkezésre álló információk alapján gyorsan kell reagálniuk a környezet változásaira.
+
+A kiberfizikai rendszerek gyakran kritikus feladatokat látnak el, ahol elengedhetetlen a helyes működés. Ennek biztosítására azonban nem mindig elegendőek a tradicionális, biztonságkritikus rendszerek esetén alkalmazott megközelítések, hiszen a gyorsan változó környezet, az alkalmazott intelligens megoldások és az elosztottság nem teszi lehetővé a tervezési idejű ellenőrzést. Erre nyújthat megoldást a futás idejű ellenőrzés, amelyre többféle megközelítés is létezik. Az időbeli viselkedéseket jellemzően automata formalizmusok segítségével és temporális nyelvekkel, míg a strukturális felépítést és adat jellegű viselkedést gráfminták segítségével tudjuk specifikálni és gráfmintaillesztés segítségével ellenőrizni. Az irodalomban is több megközelítés ismert, mi ezeket továbbfejlesztve egy olyan gráfmintaillesztés alapú elosztott ellenőrzést megvalósító keretrendszert terveztünk, amely képes egyrészt az elosztott rendszer lokális tulajdonságait vizsgálni, továbbá ezek alapján a rendszer állapotára következtetni és a lehetséges hibákat jelezni.
+
+A keretrendszer egy nyílt forráskódú gráfmintaillesztő rendszerre épül. Munkánk során ezt egészítettük ki új algoritmusokkal, hogy a gráfminta specifikációk bővebb körét tudjuk támogatni. Amennyiben az ellenőrzéshez szükséges, az elosztottan futtatott ellenőrzések eredményeiből automatikusan számítjuk a rendszer új állapotát. Nyelvi támogatást adunk a szenzor adatok feldolgozására és a tudásbázisba való integrálásának támogatására. Az általunk fejlesztett gráfmintaillesztés alapú keretrendszerrel támogatjuk az elosztott kiberfizikai rendszerek ellenőrzését, és a megközelítésünk működését egy esettanulmány segítségével demonstráljuk.
+
 
 
 \vfill
@@ -20,7 +25,12 @@ Napjainkban\dots{} \todo{TODO BEFEJEZNI}
 %----------------------------------------------------------------------------
 \chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
 
-Nowadays\dots{} \todo{TODO BEFEJEZNI}
+The rapid development of technology leads to the rise of cyber-physical systems even in the field of safety critical systems like railway, robot, and self-driving car systems. Cyber-physical systems process a huge amount of data coming from sensors and other information sources and it often has to provide real-time feedback and reaction.
+
+Cyber-physical systems are often critical, which means that their failure can lead to serious injuries or even loss of human lives. Ensuring correctness is an important issue, however traditional design-time verification approaches can not be applied due to the complex interaction with the environment, the distributed behavior and the intelligent controller solutions. Runtime analysis provides a solution where graph-based specification languages and analysis algorithms are the proper means to analyze the behavior of cyber-physical systems at runtime. Existing approaches from the literature formed the basis of our work: we developed a distributed runtime verification framework to analyze the local behavior of the components and ensure the global correctness of the systems.
+
+We developed a framework on top of an existing open-source solution. We extended the framework to support a richer set of possible specifications and we implemented the corresponding algorithms. We provided a language to support the integration of sensor information to the knowledge base and we also developed a simple language to decompose the graph specifications and distribute the analysis algorithm to the components. In case of complex global specifications, the algorithm collects the information from the various analysis components and infers the state of the system. The introduced framework was evaluated in a research project of the department and proved its usefulness.
+
 
 
 \vfill
