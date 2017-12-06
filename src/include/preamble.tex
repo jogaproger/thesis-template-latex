@@ -67,6 +67,36 @@
 		{Á}{{\'A}}1	{É}{{\'E}}1	{Í}{{\'I}}1	{Ó}{{\'O}}1	{Ö}{{\"O}}1	{Ő}{{\H{O}}}1	{Ú}{{\'U}}1	{Ü}{{\"U}}1	{Ű}{{\H{U}}}1
 }
 
+\lstdefinelanguage{vql}{
+	morekeywords={pattern, package, import},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{//}, % l is for line comment
+	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+	morestring=[b]", % defines that strings are enclosed in double quotes
+	basicstyle=\scriptsize\ttfamily, % print whole listing small
+	keywordstyle=\color{black}\bfseries, % bold black keywords
+	identifierstyle=, % nothing happens
+	% default behavior: comments in italic, to change use
+	% commentstyle=\color{green}, % for e.g. green comments
+	stringstyle=\scriptsize,
+	showstringspaces=false, % no special string spaces
+	aboveskip=3pt,
+	belowskip=3pt,
+	backgroundcolor=\color{lightgray},
+	columns=flexible,
+	keepspaces=true,
+	escapeinside={(*@}{@*)},
+	captionpos=b,
+	breaklines=true,
+	frame=single,
+	float=!ht,
+	tabsize=2,
+	literate=*
+	{á}{{\'a}}1	{é}{{\'e}}1	{í}{{\'i}}1	{ó}{{\'o}}1	{ö}{{\"o}}1	{ő}{{\H{o}}}1	{ú}{{\'u}}1	{ü}{{\"u}}1	{ű}{{\H{u}}}1
+	{Á}{{\'A}}1	{É}{{\'E}}1	{Í}{{\'I}}1	{Ó}{{\'O}}1	{Ö}{{\"O}}1	{Ő}{{\H{O}}}1	{Ú}{{\'U}}1	{Ü}{{\"U}}1	{Ű}{{\H{U}}}1
+} %
+
+
 
 %--------------------------------------------------------------------------------------
 % Set up theorem-like environments
@@ -101,6 +131,10 @@
 \DeclareMathOperator{\sign}{sgn}
 \DeclareMathOperator{\rot}{rot}
 
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+\newcommand{\viatra}{\textsc{Viatra}}
+\newcommand{\cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.07em}\raisebox{.4ex}{\tiny\bf +}}
 
 %--------------------------------------------------------------------------------------
 % Setup captions

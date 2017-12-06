@@ -10,11 +10,90 @@
 %\numberwithin{tabular}{section}
 
 %----------------------------------------------------------------------------
-\section{Measurement results on Train Benchmark}
+\section{Measured queries}
 %----------------------------------------------------------------------------
 
 
+\subsection{Patterns that are benchmarked}
+
+\begin{lstlisting}[language = vql]
+pattern trainLocations(train: Train, loc: RailRoadElement)
+{
+	Train.on(train, loc);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = vql]
+pattern derailment(elem: RailRoadElement, train: Train)
+{
+	Turnout(turnout);
+	RailRoadElement.train(elem,train);
+	
+	neg find connected(elem, turnout);
+	find straightOrDivergent(turnout, elem);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = vql]
+pattern CloseTrains(start : RailRoadElement, end : RailRoadElement)
+{
+	
+	Train.on(t1,start);
+	
+	RailRoadElement.connectedTo(start,middle); // Has EOpposite, inverse navigation is effective even without model index
+	RailRoadElement.connectedTo(middle, end);
+	
+	start != end; // This ensures that at least the start and end segment is different
+	
+	RailRoadElement.train(end, t2);
+	
+	t1 != t2; // A train may occupy two neighboring segments when moving; this is not a hazardous situation
+	
+	// Allocation-specific part of the query: global or local execution is based on the substitutions of c1 and c2
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = vql]
+pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElement)
+{
+	RailRoadElement.connectedTo(end,neighbor);
+	neg find otherNeighbor(end,neighbor,_);
+	
+	RailRoadElement.train(neighbor, train);	
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{Patterns used as helper patterns in benchmark patterns}
+
+
+\begin{lstlisting}[language = vql]
+private pattern connected(a : RailRoadElement, b : RailRoadElement){
+	RailRoadElement.connectedTo(a,b);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = vql]
+private pattern straightOrDivergent(turnout : Turnout, elem : RailRoadElement){
+	Turnout.straight(turnout, elem);
+} or {
+	Turnout.divergent(turnout, elem);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language = vql]
+private pattern otherNeighbor(e : RailRoadElement, n1 : RailRoadElement, n2 : RailRoadElement){	
+	RailRoadElement.connectedTo(e,n1);
+	RailRoadElement.connectedTo(e,n2);
+	n1 != n2;
+}
+
+\end{lstlisting}
+
+\vfill
+
 %----------------------------------------------------------------------------
-\clearpage\section{Measured queries}
+%\clearpage\section{Measured queries}
 %----------------------------------------------------------------------------
-...
+
