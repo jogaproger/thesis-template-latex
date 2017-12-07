@@ -5,12 +5,12 @@
 
 \section{Distributed runtime model}
 
-As it has been stated before, the model of the system is stored distributedly on different computation units. A model element is only stored on a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to proxy object. For example, on figure~\ref{fig:distrib-model-example} this can be seen. There are three computing units called \texttt{BBB1}, \texttt{BBB2} and \texttt{BBB3}. \texttt{s5}, \texttt{tr1}, \texttt{s4} and \texttt{s3} are located on \texttt{BBB2}. 
+As it has been stated before, the model of the system is stored distributedly on different computation units. A model element is only stored on a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to proxy object. For example, on figure~\ref{fig:distrib-model-example} this can be seen. There are 4 segments, \texttt{S1},\texttt{S2}, \texttt{S3}, \texttt{S4} and two trains, \texttt{T5} and \texttt{T6}. If we allocate \texttt{S1}, \texttt{S2}, \texttt{T5} to one computation unit, and \texttt{S3}, \texttt{S4}, \texttt{T6} to another, we must deal with the edges between \texttt{S2} and \texttt{S3} We solve this by creating a proxy objects refering to their corresponding remote nodes and refer to them instead of the original, unavailable node.
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.9\textwidth]{figures/runtime-snapshot.pdf}
-		\caption{Example for a distributed model}
+		\includegraphics[width=\textwidth]{figures/distributed-model.PNG}
+		\caption{Example for edges between nodes}
 		\label{fig:distrib-model-example}
 	\end{center}
 \end{figure}
@@ -33,7 +33,6 @@ As models are stored on different computational units we still needs to find mat
 		
 	\end{center}
 \end{figure}
-\todo{ábra okosítás}
 
 
 
