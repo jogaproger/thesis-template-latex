@@ -5,7 +5,7 @@
 
 \section{Distributed runtime model}
 
-As it has been stated before, the model of the system is stored distributedly on different computation unit. A model element only stored in a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to that object. For example, in Fig \ref{fig:distrib-model-example} this can be seen. There are three computing unit called BB1, BBB2 and BBB3. s5, tr1, s4 and s3 are located on BBB2. 
+As it has been stated before, the model of the system is stored distributedly on different computation unit. A model element only stored in a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to that object. For example, in Fig \ref{fig:distrib-model-example} this can be seen. There are three computing units called \texttt{BBB1}, \texttt{BBB2} and \texttt{BBB3}. \texttt{s5}, \texttt{tr1}, \texttt{s4} and \texttt{s3} are located on \texttt{BBB2}. 
 
 \begin{figure}[h]
 	\begin{center}

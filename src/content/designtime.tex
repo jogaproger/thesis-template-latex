@@ -2,8 +2,8 @@
 \chapter{Design time details}
 %%
 
-Before the monitoring components can be generated and deployed we must design the system. First the metamodel must be designed, and after the metamodel is specified, we define graph queries, as they depend on the metamodel of the graph on which they are evaluated. These two steps can be done using EMF and Viatra eclipse technologies. \todo{ezt kicsit pontosítani, kifejteni}. 
- 
+Before the monitoring components can be generated and deployed, we must design the system. First, the metamodel must be designed, and after the metamodel is specified, we define graph queries, as they depend on the metamodel of the graph on which they are evaluated. These two steps can be done using EMF and Viatra eclipse technologies. \todo{ezt kicsit pontosítani, kifejteni}. 
+
 In this chapter, I present how the monitoring components are generated from this these artifacts. 
 
 
@@ -20,7 +20,7 @@ The types of the metamodel are mapped to \cpp{} classes in the following way: Fr
 
 \section{Overview of the query compilation workflow}
 
-The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. First the local search planner of the \viatra{} system creates a plan. We complete the generated plan with types and other supplementary information, and make a distributed version of the plans. After that, we use additional optimization specialized for our execution mechanism to improve the execution. After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files.
+The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. First, the local search planner of the \viatra{} system creates a plan. We complete the generated plan with types and other supplementary information and make a distributed version of the plans. After that, we use additional optimization specialized for our execution mechanism to improve the execution. After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files.
 
 \begin{figure}[h]
 	\begin{center}
@@ -33,7 +33,7 @@ The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-
 
 \section{\viatra{} plan}
 
-The query file is processed by \viatra{} and a local search plan is generated. In case of localsearch the plan is a sequence of search operation defined as an application of a constraint.
+The query file is processed by \viatra{}~\cite{viatra} and a local search plan is generated. In case of local search, the plan is a sequence of search operation defined as an application of a constraint.
 
 
 \section{Completed plan}
@@ -48,6 +48,8 @@ After we complete the plan with type information and other information it can be
 \section{C++ code generation}
 
 The completed and optimized plan are used to generate \cpp{} code.
+\todo{két metódus}
+
 
 
 
