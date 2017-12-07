@@ -33,16 +33,27 @@ The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-
 
 \section{\viatra{} plan}
 
-The query file is processed by \viatra{} and a local search plan is generated. 
+The query file is processed by \viatra{} and a local search plan is generated. In case of localsearch the plan is a sequence of search operation defined as an application of a constraint.
 
 
 \section{Completed plan}
 
+\viatra{} generated plans are not intended for external usage. We need to complete it with additional information to use it for our purposes. One of the main concern is type information. To obtain type information we use the constraints to deduce the type of a variable. 
+
 
 \section{Additional optimization}
 
-After we complete the plan with type information it mainly reflects 
+After we complete the plan with type information and other information it can be used to generate C++ code, although before that step we use further optimizations. These optimizations are ba
 
 \section{C++ code generation}
+
+The completed and optimized plan are used to generate \cpp{} code.
+
+
+
+
+
+
+
 
 
