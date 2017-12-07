@@ -5,7 +5,7 @@
 
 \section{Distributed runtime model}
 
-As it has been stated before, the model of the system is stored distributedly on different computation unit. A model element only stored in a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to that object. For example, on figure~\ref{fig:distrib-model-example} this can be seen. There are three computing units called \texttt{BBB1}, \texttt{BBB2} and \texttt{BBB3}. \texttt{s5}, \texttt{tr1}, \texttt{s4} and \texttt{s3} are located on \texttt{BBB2}. 
+As it has been stated before, the model of the system is stored distributedly on different computation units. A model element is only stored on a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to proxy object. For example, on figure~\ref{fig:distrib-model-example} this can be seen. There are three computing units called \texttt{BBB1}, \texttt{BBB2} and \texttt{BBB3}. \texttt{s5}, \texttt{tr1}, \texttt{s4} and \texttt{s3} are located on \texttt{BBB2}. 
 
 \begin{figure}[h]
 	\begin{center}
@@ -28,6 +28,12 @@ As models are stored on different computational units we still needs to find mat
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=1\textwidth]{figures/seq-diagram-query-exec.png}
+		\caption{Sequence diagram of an example query execution}
+		\label{fig:distibuted-exec}
+		
 	\end{center}
 \end{figure}
 \todo{ábra okosítás}
+
+
+
