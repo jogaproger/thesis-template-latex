@@ -11,11 +11,7 @@ Structural and behavioral modeling of systems are often done using graphs, we us
 
 \section{Runtime modeling}
 
-In this thesis, we use structural modeling to model the current state of the system. This model is called the live model, which captures the state and the operating context of the system. We monitor the system through this model: The model is updated with sensor data and other information sources and the model itself is 
-
-\subsection{Runtime modeling example}
-
-
+In this thesis, we use structural modeling to model the current state of the system. This model is called the live model, which captures the state and the operating context of the system. We monitor the system through this model: The model is updated with sensor data and information from other sources, so the model represents the physical system too. 
 
 \section{Graph pattern matching concepts}
 
@@ -27,7 +23,15 @@ In this thesis, we use structural modeling to model the current state of the sys
 	\end{center}
 \end{figure}
 
-A graph pattern's purpose is to define a set of constraints that can be satisfied by the vertices of the graph. A list of vertices satisfying those constraints is called a \emph{match}.
+A graph pattern's purpose is to define a list of variables, representing nodes, and a set of constraints for those variables. Some of the possible constraints are:
+\begin{itemize}
+	\item Type constraint -- a given node must be an instance of a type
+	\item Reference -- a given reference must exist between two node
+	\item Equality -- two variable must be the same
+	\item Pattern match -- a subset of variables match to another graph pattern
+	\item Negative application condition (NAC) -- a subset of variables must not match to another graph pattern
+\end{itemize}
+A list of vertices is called a \emph{match}, if binding them to the variables causes the constraints to be true.
 
 \section{Local search}
 
@@ -37,16 +41,18 @@ Local search~\cite{bur-marton-msc} is an algorithm to provide matchings of a gra
 	\item The constraint is satisfied by the child
 \end{itemize}
 
-The search tree can be traversed without materializing it with depth-first search. 
+The search tree can be traversed without materializing it with depth-first search. This means, that the elements of the search tree are calculated on the fly, by modifying the parent variable binding.
 
-To optimize the size of the search tree the order of the constraints must be chosen 
+To optimize the size of the search tree the order of the constraints must be chosen properly. 
 
 \section{Distributed platform}
 
 % adatok diszjunkt halmazokra bontva különböző csomópontra
 % az algoritmusok is elosztottak, nem lesz összegyűjtve az infó, úgy van kiértékelve, hogy nincs aki mindent látna a rendszerből
 
-Cyber-physical systems are distributed hence there are different ways to process the sensor data incoming into the computation nodes. \todo{különböző módok bemutatása mi diszjunk elosztott modellt választottunk}
+As cyber-physical systems are distributed we must deal with the sensor data coming from different sensors at different computation units of the system. Sending the sensor data to one computation unit and evaluate on that cause different problems: Sensor data can be huge to send it through the network, the central node can be a SPOF, etc. In the presented framework the live model is distributed on the different computation units and the graph pattern matching algorithm itself runs in a distributed way. This eliminates the problem of central computers, but introduces complexity, that we must handle. 
+
+
 
 
 
