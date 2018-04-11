@@ -7,13 +7,25 @@
 
 \section{Modeling using graphs}
 
-Structural and behavioral modeling of systems are often done using graphs, we use them for structural modeling of the system. Graphs are useful abstraction as they are easy to understand, and lots of algorithms can be used to process them.
+Structural and behavioral modeling of systems are often done using graphs. Graphs are useful abstraction as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them.
 
 \section{Runtime modeling}
 
-In this thesis, we use structural modeling to model the current state of the system. This model is called the live model, which captures the state and the operating context of the system. We monitor the system through this model: The model is updated with sensor data and information from other sources, so the model represents the physical system too. 
+In this framework, we use structural modeling to model the current state of the system. This model is called the live model, which captures the state and the operating context of the system. We monitor the system through this model: The model is updated with sensor data and information from other sources, so the model represents the physical system's latest state. 
 
 \section{Graph pattern matching concepts}
+
+A graph pattern's purpose is to define a list of variables, representing nodes, and a set of constraints for those variables. Some of the possible constraints are:
+
+\begin{itemize}
+	\item Type constraint -- a given node must be an instance of a type
+	\item Reference -- a given reference must exist between two node
+	\item Equality -- two variable must be the same
+	\item Pattern match -- a subset of variables match to another graph pattern
+	\item Negative application condition (NAC) -- a subset of variables must not match to another graph pattern
+\end{itemize}
+A list of vertices is called a \emph{match}, if binding them to the variables causes the constraints to be true.
+
 
 \begin{figure}[h]
 	\begin{center}
@@ -23,15 +35,6 @@ In this thesis, we use structural modeling to model the current state of the sys
 	\end{center}
 \end{figure}
 
-A graph pattern's purpose is to define a list of variables, representing nodes, and a set of constraints for those variables. Some of the possible constraints are:
-\begin{itemize}
-	\item Type constraint -- a given node must be an instance of a type
-	\item Reference -- a given reference must exist between two node
-	\item Equality -- two variable must be the same
-	\item Pattern match -- a subset of variables match to another graph pattern
-	\item Negative application condition (NAC) -- a subset of variables must not match to another graph pattern
-\end{itemize}
-A list of vertices is called a \emph{match}, if binding them to the variables causes the constraints to be true.
 
 \section{Local search}
 
