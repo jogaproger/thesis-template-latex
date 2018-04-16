@@ -4,18 +4,22 @@
 %----------------------------------------------------------------------------
 
 
-
 \section{Modeling using graphs}
 
-Structural and behavioral modeling of systems are often done using graphs. Graphs are useful abstraction as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
+Structural and behavioral modeling of systems are often done using graphs. 
+Graphs are useful abstraction as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
+As model based approach uses models mostly of graph based formalism, in this section, graph based modeling is presented.
 
-To extend its usability, graphs can be extended by:
+A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: a source-- and target node of that edge. 
+Graphs can be extended to make them suitable for modeling:
+
 \begin{itemize}
-	\item Attributes can be added to nodes
-	\item Edges can 
+	\item by nodes having attributes with given values (e.g.\ name)
+	\item by edges having labels implying their semantics
 \end{itemize}
 
-This models structure can also be restricted by defining a metamodel
+With this extended graph model, there is also a need to give rules for certain types of models, which is the main purpose of domain modeling.
+A \emph{domain model} is a metamodel, defining the restrictions for the graph model of a system, i.e.\ what types of nodes exist, what kind of edges can go from one node to another, or what kind of attributes can
 
 \section{Runtime modeling}
 
