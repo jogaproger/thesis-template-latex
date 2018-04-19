@@ -4,18 +4,21 @@
 
 Before the monitoring components can be generated and deployed, we must design the system. First, the metamodel must be designed, and after the metamodel is specified, we define graph queries, as they depend on the metamodel of the graph on which they are evaluated. As stated before, these two steps are done using EMF and \viatra{} technologies.
 
-In this chapter, I present how the monitoring components are generated from this these artifacts. 
+In this chapter, I present how the monitoring components are generated from these artifacts. 
 
 \section{Generating classes from the metamodel}
 
-The types of the metamodel are mapped to \cpp{} classes in the following way: From each type we generate three \cpp{} classes:
+The EClasses of the metamodel are mapped to \cpp{} classes in the following way: From each EClass we generate three \cpp{} classes:
 
-\begin{enumerate}
-	\item An interface which provides access to an object of the type
-	\item A local class, that stores the attributes and references of the instances allocated to the local computing unit.
-	\item A proxy class, which can be used to substitute remote objects in references to them.
-\end{enumerate}
+\begin{itemize}
+	\item An interface
+	\item A local class
+	\item A proxy class
+\end{itemize}
 
+The interface provides access to an instance of the EClass. 
+The local class implements the interface. It stores the attributes and references of the instances allocated to the local computing unit, and made them accessible by the methods of the implemented interface.
+The proxy class implements the interface, but can only be used to substitute remote objects in references to them. Accessing its variables are not possible, because they are stored in another node.
 
 \section{Overview of the query compilation workflow}
 
@@ -32,7 +35,8 @@ The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-
 
 \section{Viatra plan}
 
-The query file is processed by \viatra{}~\cite{viatra} and a local search plan is generated. In case of local search, the plan is a sequence of search operation defined as an application of a constraint.
+The query file is processed by \viatra{}~\cite{viatra} and a local search plan is generated. 
+In case of local search, the plan is a sequence of search operation defined as an application of a constraint.
 
 
 \section{Completed plan}
