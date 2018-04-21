@@ -21,11 +21,35 @@ Graphs can be extended to make them suitable for modeling:
 With this extended graph model, there is also a need to give rules for certain types of models, which is the main purpose of domain modeling.
 A \emph{domain model} is a metamodel, defining the restrictions for the graph model of a system, i.e.\ what types of nodes exist, what kind of edges can go from one node to another, or what kind of attributes can
 
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{figures/graphs.pdf}
+		\caption{Basic graph (left), and extended (right) }
+		\label{fig:graphs}
+	\end{center}
+\end{figure}
+
+
 \section{Runtime modeling}
 
-In this framework, we use structural modeling to model the current state of the system. This model is called the live model, which captures the state and the operating context of the system. We monitor the system through this model: The model is updated with sensor data and information from other sources, so the model represents the physical system's latest state. 
+In this framework, we use structural modeling to model the current state of the system. 
+This model is called the live model, which captures the state and the operating context of the system. 
+We monitor the system through this model: 
+The model is updated with sensor data and information from other sources, so the model represents the physical system's latest state. 
 
 \section{Graph pattern matching concepts}
+
+As runtime analysis of the system is based on the runtime model, we needs to identify problems in the graph model. 
+Graph pattern matching offers a solution for this task. 
+The goal of graph pattern matching is to find all the subgraphs of a graph meeting a certain criteria, defined by a \emph{graph pattern}.
+
+A \emph{graph pattern} is given by a first-order logical expression. 
+Not quantified variables are called \emph{parameters}.  
+A \emph{pattern match} is a variable binding between parameters and graph vertices, that satisfies the expression.
+A \emph{graph query} is a program or execution plan capable of calculating the matches of a graph pattern on a given graph. 
+Planning the most efficient graph query is crucial, because the performance of the verification depends on it.
+
+
 
 A graph pattern's purpose is to define a list of variables, representing nodes, and a set of constraints for those variables. Some of the possible constraints are:
 
@@ -33,6 +57,7 @@ A graph pattern's purpose is to define a list of variables, representing nodes, 
 	\item Type constraint -- a given node must be an instance of a type
 	\item Reference -- a given reference must exist between two node
 	\item Equality -- two variable must be the same
+	\item Inequality -- two variable must have different value
 	\item Pattern match -- a subset of variables match to another graph pattern
 	\item Negative application condition (NAC) -- a subset of variables must not match to another graph pattern
 \end{itemize}
@@ -50,7 +75,7 @@ A list of vertices is called a \emph{match}, if binding them to the variables ca
 
 \section{Local search}
 
-Local search~\cite{bur-marton-msc} is an algorithm to provide matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
+Local search~\cite{bur-marton-msc} is an algorithm, which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
 \begin{itemize}
 	\item The bound variables of the parent are bound to the same values as the corresponding variable in the child
 	\item The constraint is satisfied by the child
