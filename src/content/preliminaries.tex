@@ -19,7 +19,7 @@ Graphs can be extended to make them suitable for modeling:
 \end{itemize}
 
 With this extended graph model, there is also a need to give rules for certain types of models, which is the main purpose of domain modeling.
-A \emph{domain model} is a metamodel, defining the restrictions for the graph model of a system, i.e.\ what types of nodes exist, what kind of edges can go from one node to another, or what kind of attributes a vertex can have.
+A \emph{domain model} is a metamodel, defining the restrictions for the graph model of a system, i.e.\ what types of nodes exist, what kind of edges can go from one node to another, or what kind of attributes a node can have.
 
 \begin{figure}[h]
 	\begin{center}
@@ -36,6 +36,16 @@ In this framework, we use structural modeling to model the current state of the 
 The state and the operating context of the system is captured in a model called the \emph{live model}.
 It is updated with sensor data and information from other sources, so the model represents the physical system's latest state. 
 This model can be used to infer problems in the state of the system, so it can be used for runtime verification.
+
+
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{figures/live-models.pdf}
+		\caption{Live model updating}
+		\label{fig:live-models}
+	\end{center}
+\end{figure}
 
 \section{Graph pattern matching concepts}
 
@@ -56,8 +66,8 @@ These constraints are:
 \begin{itemize}
 	\item Type constraint -- Satisfied, when the variable's value is a vertex of a given type
 	\item Reference -- Satisfied, when an edge with a given label exists from the first variables value to the second variables value
-	\item Equality -- two variable's value is the same vertex
-	\item Inequality -- two variable's values are different vertices
+	\item Equality -- two variable's value is the same
+	\item Inequality -- two variable's values are different
 	\item Pattern match -- a tuple of variable values are a match of another pattern
 	\item Negative application condition (NAC) -- a tuple of variable values are \emph{not} a match of another pattern
 \end{itemize}
@@ -68,7 +78,7 @@ An expression is a logical conjunction of subexpressions called pattern bodies (
 A \emph{pattern body} existentially quantifyes all the variables \todo{ITT KELL EZT KICSIT OKOSABBAN: Kvantifikált változók majd kényszerek diszjunkciója}
 
 
-We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough it is harder to use in case of more complex patterns.
+We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textural languages (see VQL) is used in the framework.
 
 \begin{figure}[h]
 	\begin{center}
@@ -81,7 +91,7 @@ We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to i
 
 \section{Local search}
 
-Local search~\cite{bur-marton-msc} is a method, which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
+Local search~\cite{bur-marton-msc} is a method for solving problems where the task is to find solutions involving a search space., which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
 \begin{itemize}
 	\item The bound variables of the parent are bound to the same values as the corresponding variable in the child
 	\item The constraint is satisfied by the child
@@ -100,7 +110,23 @@ As cyber-physical systems are distributed we must deal with the sensor data comi
 Sending the sensor data to one computation unit and evaluate on that cause different problems: 
 Sensor data can be huge to send it through the network, the central node can be a SPOF, etc. 
 In the presented framework the live model is distributed on the different computation units and the graph pattern matching algorithm itself runs in a distributed way. 
-This eliminates the problem of central computers, but introduces complexity, that we must handle: Distributed local search planner shall consider distributed execution.
+This eliminates the problem of central computers, but introduces complexity, that we must handle.
+
+\subsection{Distributed graph modeling}
+
+In this thesis, the phrase \emph{computing module} is used to denote a physical or virtual execution component of the cps that is capable of storing a part of the graph model and updates it to fit the current state the physical world, eg.\ an embedded system or a virtual machine.
+
+Distributed graph models can be architected in various ways. 
+In our framework each node in the graph are allocated to a computing element. 
+On that computing element, call that node a \emph{local node}. 
+In the context of other computing modules this node is a \emph{remote node}. 
+Edges are stored in the computing module of their source node; 
+If their destination node is not a local node on that node, a \emph{proxy node} is used to substitute the remote node.
+
+\subsection{Distributed query execution}
+
+Distributed query execution is used in the framework to provide matches to graph patterns. 
+A distributed local search planner shall consider distributed execution to improve its execution performance.
 
 
 

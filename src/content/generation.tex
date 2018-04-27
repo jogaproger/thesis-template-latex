@@ -65,12 +65,13 @@ There are some cases, where helper patterns are simple, and used to define simpl
 In this case, evaluationg the subquery is not always the most efficient method, sometimes these can be replaced by simple search operations:
 
 \subsubsection{Reference Pattern}
-We use the phrase \emph{reference pattern} for a pattern with 2 parameters if its only constraint is that a reference exist between the two parameters, eq.:
+We use the phrase \emph{reference pattern} for a pattern with 2 parameters if its only constraint is that a reference exist between the two parameters, eg.:
 \begin{lstlisting}[language = vql]
 private pattern connected(a : RailRoadElement, b : RailRoadElement){
 	RailRoadElement.connectedTo(a,b);
 }
 \end{lstlisting}
+
 In the following examples i will use this query as an example to demonstrate how the application of this query can be replaced by an other operation.
 
 \subsubsection{Counting reference pattern}
