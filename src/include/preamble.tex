@@ -68,7 +68,7 @@
 }
 
 \lstdefinelanguage{vql}{
-	morekeywords={pattern, package, import},
+	morekeywords={pattern, package, import, or, private},
 	sensitive=false, % keywords are not case-sensitive
 	morecomment=[l]{//}, % l is for line comment
 	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
@@ -89,7 +89,8 @@
 	captionpos=b,
 	breaklines=true,
 	frame=single,
-	float=!ht,
+%	float=!ht,
+%	floatplacement=tbp,
 	tabsize=2,
 	literate=*
 	{á}{{\'a}}1	{é}{{\'e}}1	{í}{{\'i}}1	{ó}{{\'o}}1	{ö}{{\"o}}1	{ő}{{\H{o}}}1	{ú}{{\'u}}1	{ü}{{\"u}}1	{ű}{{\H{u}}}1

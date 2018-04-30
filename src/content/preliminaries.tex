@@ -53,7 +53,7 @@ As runtime analysis of the system is based on the runtime model, we needs to ide
 Graph pattern matching offers a solution for this task. 
 The goal of graph pattern matching is to find all the subgraphs of a graph meeting a certain criteria, defined by a \emph{graph pattern}.
 
-A \emph{graph pattern} is given by a \emph{restricted} first-order logical expression, where variables refer to vertices of the graph.
+A \emph{graph pattern} is given by a \emph{restricted} first-order logical expression, where variables refer to vertices of the graph or data values (string, numeric, enumeral).
 Not quantified variables are called \emph{parameters}.  
 A \emph{pattern match} is a variable binding between parameters and graph vertices, that satisfies the expression.
 A \emph{graph query} is a program or execution plan capable of calculating the matches of a graph pattern on a given graph. 
