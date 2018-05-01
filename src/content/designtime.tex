@@ -11,11 +11,19 @@ while graph pattern definition and processing are provided by \viatra{}.
 \section{Eclipse Modeling Framework}
 
 
-\begin{figure}[!ht]
+\begin{figure}
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{figures/EcoreHierarchy.png}
 		\caption{Hierarchy of Ecore elements}
 		\label{fig:ecore-hierarchy}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/EcoreRelations.png}
+		\caption{Relations between Ecore elements}
+		\label{fig:ecore-relations}
 	\end{center}
 \end{figure}
 
@@ -32,7 +40,7 @@ EModelElement expands EObject by giving the possibility to annotate them.
 
 An Ecore model contains packages (EPackage). 
 Packages have a namespace URI (nsURI), which can be used to refer it in other context eg.\ Viatra graph pattern definition.
-Packages can contain other subpackages, classes (EClass), enumerations(EEnum), and data types(EDataType).
+Packages can contain other subpackages, classes (EClass), enumerations (EEnum), and data types (EDataType).
 
 Classes have structural features: references and attributes (EStructuralFeature, EReference, EAttribute); also they have operations (EOperation).
 References and attributes have multiplicity, defining their lower and upper bound is also possible.
@@ -42,28 +50,18 @@ Two way navigation can be achieved by defining two reference and set them as the
 Multiple inheritance is supported for classes (eSuperTypes refers to direct base classes, and eAllSuperTypes for all transitively inherited base classes).
 
 Besides classes, packages can contain enumerations and data types. 
-Basic data types, like EString, EInt, EBoolean etc.\ are defined by EMF, so its mostly never necessary to define others.
+Basic data types -- like EString, EInt, EBoolean etc.\ -- are defined by EMF, so its mostly never necessary to define others.
 Enumerations are consists of EEnumLiterals. 
 EEnumLiterals have an integral unique value, and its name is encapsulated in its EEnumerator instance.
 
 
-
-
-
-\begin{figure}[!ht]
-	\begin{center}
-		\includegraphics[width=\textwidth]{figures/EcoreRelations.png}
-		\caption{Relations between Ecore elements}
-		\label{fig:ecore-relations}
-	\end{center}
-\end{figure}
 
 	
 
 \section{\viatra{} query language (VQL)}
 
 As stated before, graph patterns can be defined using \viatra{} query language (VQL). 
-The language syntax is simple, altough complex queries are not always self evident how to be expressed, because graph patterns structure is somewhat strict.
+The language syntax is simple, altough complex queries are not always self evident how to be expressed.
 
 \subsection{Pattern definition}
 Patterns and its bodies can be given by the \emph{pattern} keyword. 
@@ -131,8 +129,18 @@ Also, we can use underscore if we don't want that the other pattern match occurs
 
 \begin{lstlisting}[language=vql]
 pattern patternName( p1: Type1 ){
-neg find otherPattern(p1, _);
+	neg find otherPattern(p1, _);
 }
 \end{lstlisting}
 \end{minipage}
 \vspace{\belowdisplayskip}
+
+
+\todo{eval, check, count find, equality, inequality}
+
+
+
+\section{VQL examples from the case study}
+
+\todo{TODO megcsinalni}
+

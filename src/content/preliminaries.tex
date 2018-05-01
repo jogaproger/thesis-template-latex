@@ -10,7 +10,7 @@ Structural and behavioral modeling of systems are often done using graphs.
 Graphs are useful abstraction as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
 As model based approach uses models mostly of graph based formalism, in this section, graph based modeling is presented.
 
-A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: a source-- and target node of that edge. 
+A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: a source and a target node of that edge. 
 Graphs can be extended to make them suitable for modeling:
 
 \begin{itemize}
@@ -18,8 +18,10 @@ Graphs can be extended to make them suitable for modeling:
 	\item by edges having labels implying their semantics
 \end{itemize}
 
-With this extended graph model, there is also a need to give rules for certain types of models, which is the main purpose of domain modeling.
-A \emph{domain model} is a metamodel, defining the restrictions for the graph model of a system, i.e.\ what types of nodes exist, what kind of edges can go from one node to another, or what kind of attributes a node can have.
+In case of this extended graph model we also use the term \emph{object} for nodes and \emph{reference} for edges.
+
+With this extended graph model, there is also a need to give rules for certain types of models, which is the role of \emph{domain modeling}.
+A \emph{domain model} is a metamodel, defining how the graph model of a system is built up, i.e.\ what attributes a node has, how edges can be 
 
 \begin{figure}[h]
 	\begin{center}
@@ -50,12 +52,12 @@ This model can be used to infer problems in the state of the system, so it can b
 \section{Graph pattern matching concepts}
 
 As runtime analysis of the system is based on the runtime model, we needs to identify problems in the graph model. 
-Graph pattern matching offers a solution for this task. 
+Graph pattern matching offers a solution for this problem. 
 The goal of graph pattern matching is to find all the subgraphs of a graph meeting a certain criteria, defined by a \emph{graph pattern}.
 
 A \emph{graph pattern} is given by a \emph{restricted} first-order logical expression, where variables refer to vertices of the graph or data values (string, numeric, enumeral).
-Not quantified variables are called \emph{parameters}.  
-A \emph{pattern match} is a variable binding between parameters and graph vertices, that satisfies the expression.
+Free(not quantified) variables are called \emph{parameters}.  
+A \emph{pattern match} is a variable binding, where variables are assigned to graph nodes and data values in a way, that satisfies the expression.
 A \emph{graph query} is a program or execution plan capable of calculating the matches of a graph pattern on a given graph. 
 Planning the most efficient graph query is crucial, because the performance of the verification depends on it.
 
@@ -74,15 +76,18 @@ These constraints are:
 
 
 We built up the expression defining the graph pattern the following way. 
-An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \wedge B_2 \wedge \dots$). 
-A \emph{pattern body} existentially quantifyes all the variables \todo{ITT KELL EZT KICSIT OKOSABBAN: Kvantifikált változók majd kényszerek diszjunkciója}
+An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \vee B_2 \vee \dots$). 
+A \emph{pattern body} is an existentially quantified expression, quantified over a disjunction of constraints ($\exists{} v_1, v_2, \dots : C_1 \wedge{} C_2 \wedge \dots$).
 
+For example, if we want to express
+
+\viatra{} Query Language syntax conform with this structure, and this way our expressions are capable of local search planning.
 
 We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textural languages (see VQL) is used in the framework.
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.75\textwidth]{figures/pattern-visual.pdf}
+		\includegraphics[width=\textwidth]{figures/closeTrains-pattern.pdf}
 		\caption{Non-formal visual representation of a graph pattern}
 		\label{fig:pattern-visual}
 	\end{center}
@@ -91,7 +96,7 @@ We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to i
 
 \section{Local search}
 
-Local search~\cite{bur-marton-msc} is a method for solving problems where the task is to find solutions involving a search space., which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
+Local search~\cite{bur-marton-msc} is a method for solving problems involving a search space., which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
 \begin{itemize}
 	\item The bound variables of the parent are bound to the same values as the corresponding variable in the child
 	\item The constraint is satisfied by the child
