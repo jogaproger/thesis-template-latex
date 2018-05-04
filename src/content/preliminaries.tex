@@ -10,7 +10,7 @@ Structural and behavioral modeling of systems are often done using graphs.
 Graphs are useful abstraction as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
 As model based approach uses models mostly of graph based formalism, in this section, graph based modeling is presented.
 
-A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: a source and a target node of that edge. 
+A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: its \emph{source} node and its \emph{target} node. 
 Graphs can be extended to make them suitable for modeling:
 
 \begin{itemize}
@@ -18,16 +18,27 @@ Graphs can be extended to make them suitable for modeling:
 	\item by edges having labels implying their semantics
 \end{itemize}
 
-In case of this extended graph model we also use the term \emph{object} for nodes and \emph{reference} for edges.
-
-With this extended graph model, there is also a need to give rules for certain types of models, which is the role of \emph{domain modeling}.
-A \emph{domain model} is a metamodel, defining how the graph model of a system is built up, i.e.\ what attributes a node has, how edges can be 
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.75\textwidth]{figures/graphs.pdf}
 		\caption{Basic graph (left), and extended (right) }
 		\label{fig:graphs}
+	\end{center}
+\end{figure}
+
+In case of this extended graph model we also use the term \emph{object} for nodes and \emph{reference} for edges.
+
+With this extended graph model, there is also a need to give rules for certain types of models, which is the role of \emph{meta modeling}.
+A meta model is a model, that defines how the graph model of a system is built up, i.e.\ what attributes a node has, how edges can be 
+
+
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{figures/metamodel.pdf}
+		\caption{ Example of a metamodel and an intance model }
+		\label{fig:metamodel}
 	\end{center}
 \end{figure}
 
@@ -79,9 +90,8 @@ We built up the expression defining the graph pattern the following way.
 An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \vee B_2 \vee \dots$). 
 A \emph{pattern body} is an existentially quantified expression, quantified over a disjunction of constraints ($\exists{} v_1, v_2, \dots : C_1 \wedge{} C_2 \wedge \dots$).
 
-For example, if we want to express
-
-\viatra{} Query Language syntax conform with this structure, and this way our expressions are capable of local search planning.
+\viatra{} Query Language syntax conform with this structure as this restriction leads to more easily understandable .
+This restriction also helps our expressions to become evaluable using local search.
 
 We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textural languages (see VQL) is used in the framework.
 
@@ -96,7 +106,13 @@ We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to i
 
 \section{Local search}
 
-Local search~\cite{bur-marton-msc} is a method for solving problems involving a search space., which provides matchings of a graph pattern in a graph. It is a depth-first search in the space of variable bindings. In the root of the search tree all the variables are unbound. Then with each constraint, we add a new level for the tree. The child of a variable binding is all the other variable binding where 
+Local search~\cite{bur-marton-msc} is a method for solving problems involving a search space. 
+
+It also can be used to provide matchings of a graph pattern in a graph. 
+It is a depth-first search in the space of variable bindings. 
+In the root of the search tree all the variables are unbound. 
+Then with each constraint, we add a new level for the tree.
+The child of a variable binding is all the other variable binding where 
 \begin{itemize}
 	\item The bound variables of the parent are bound to the same values as the corresponding variable in the child
 	\item The constraint is satisfied by the child
@@ -122,7 +138,7 @@ This eliminates the problem of central computers, but introduces complexity, tha
 In this thesis, the phrase \emph{computing module} is used to denote a physical or virtual execution component of the cps that is capable of storing a part of the graph model and updates it to fit the current state the physical world, eg.\ an embedded system or a virtual machine.
 
 Distributed graph models can be architected in various ways. 
-In our framework each node in the graph are allocated to a computing element. 
+In our framework each node in the graph is allocated to a computing element. 
 On that computing element, call that node a \emph{local node}. 
 In the context of other computing modules this node is a \emph{remote node}. 
 Edges are stored in the computing module of their source node; 

@@ -14,7 +14,7 @@ while graph pattern definition and processing are provided by \viatra{}.
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{figures/EcoreHierarchy.png}
-		\caption{Hierarchy of Ecore elements}
+		\caption{Hierarchy of Ecore elements (Source: \cite{ecore-package}) }
 		\label{fig:ecore-hierarchy}
 	\end{center}
 \end{figure}
@@ -22,13 +22,13 @@ while graph pattern definition and processing are provided by \viatra{}.
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/EcoreRelations.png}
-		\caption{Relations between Ecore elements}
+		\caption{Relations between Ecore elements (Source: \cite{ecore-package}) }
 		\label{fig:ecore-relations}
 	\end{center}
 \end{figure}
 
 Eclipse Modeling Framework (EMF) is an Eclipse based technology, which provides tools for model based developement: 
-Ecore for metamodeling (Ecore actually defines a meta meta-model for metamodeling), and various tools like java code generation from ecore models, etc.
+Ecore \cite{ecore-package} for metamodeling (Ecore actually defines a meta meta-model for metamodeling), and various tools like java code generation from ecore models, etc.
 
 Ecore metamodeling is highly similar to defining class diagrams in UML, however, 
 Ecore is more suitable for data and structural modeling: Interfaces are not a part of it, even though it can be substituted by abstract classes.
@@ -73,8 +73,8 @@ Bodies of the pattern are given in curly brackets, separeted by the \emph{or} ke
 pattern patternName( p1: Type1, p2: Type2){
 ... // Constraints for first body
 } or {
-... // Constraints for first body
-}
+... // Constraints for second body
+} ...
 \end{lstlisting}
 \end{minipage}
 
@@ -87,8 +87,8 @@ Each constraint is followed by a semicolon.
 \begin{minipage}{\textwidth}
 Type constraint can be given by specifying the type, then the object in round brackets.
 \begin{lstlisting}[language=vql]
-pattern patternName( p1 ){
-	Type1(p1);
+pattern patternName( o ){
+	Type(o);
 }
 \end{lstlisting}
 \end{minipage}
@@ -97,8 +97,8 @@ pattern patternName( p1 ){
 \begin{minipage}{\textwidth}
 Reference constraint can be given by specifying which type's which reference must be checked, then giving the source and target variables in round brackets:
 \begin{lstlisting}[language=vql]
-pattern patternName( p1: Type1, p2: Type2 ){
-	Type1.ReferenceLabel(p1, p2);
+pattern patternName( p1: Person, p2: Person ){
+	Person.friend(p1, p2);
 }
 \end{lstlisting}
 \end{minipage}
@@ -112,6 +112,21 @@ pattern patternName( p1: Type1, p2: Type2, p3: Type3 ){
 	find otherPatternName(p2, p3);
 }
 \end{lstlisting}
+
+Also we can use underscore instead of specifying parameters. 
+This way the constraint is satisfied, if the pattern matches with anything in the place of underscores (existential quantification).
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+find otherPatternName(p1, _);
+}
+\end{lstlisting}
+
+This is the same as the following (if x is not used anywhere else):
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+find otherPatternName(p1, x);
+}
+\end{lstlisting}
 \end{minipage}
 \vspace{\belowdisplayskip}
 
@@ -123,9 +138,8 @@ pattern patternName( p1: Type1, p2: Type2 ){
 	Type1.reference(p1, p2);
 }
 \end{lstlisting}
-\vspace{\belowdisplayskip}
 
-Also, we can use underscore if we don't want that the other pattern match occurs with \emph{any} value at the underscores. (neg find can be used to express negated expressions along with negated existential quantification)
+Also, we can use underscore if we don't want that the other pattern match occurs with \emph{any} value at the underscores. ( ie.\ neg find can be used to express negated existential quantification along with negated expressions )
 
 \begin{lstlisting}[language=vql]
 pattern patternName( p1: Type1 ){
@@ -135,9 +149,36 @@ pattern patternName( p1: Type1 ){
 \end{minipage}
 \vspace{\belowdisplayskip}
 
+\todo{Ez nem ugyanaz mint az előző esetben}
 
-\todo{eval, check, count find, equality, inequality}
+\begin{minipage}{\textwidth}
+The keyword check can be used to create a constraint, that a given a java (XBase) expression is true. The expression only can refer to attribute  variables (Variables refering to data types instead of graph nodes).
+\begin{lstlisting}[language=vql]
+pattern adultPerson( p: Person ){
+	Person.age(p, age);
+	check(age >= 18);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
 
+\begin{minipage}{\textwidth}
+The keyword eval can be used to evaluate a java (XBase) expression on attribute variables and assign the result to another variable.
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Person, p2: Person, agesum : EInt ){
+	Person.age(P1, a1);
+	Person.age(P2, a2);
+	agesum = eval(a1 + a2);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+\todo{ count find, equality, inequality}
+
+\subsection{Annotations}
 
 
 \section{VQL examples from the case study}

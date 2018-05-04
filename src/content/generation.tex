@@ -2,12 +2,24 @@
 \chapter{Generating query based monitoring components}
 %%
 
-Before the monitoring components can be generated and deployed, we must design the system.
-First, the metamodel must be designed, and after the metamodel is specified, we define graph queries, as they depend on the metamodel of the graph on which they are evaluated. 
-As stated before, these two steps are done using EMF and \viatra{} technologies.
+After we designed the domain model of the system, and defined the graph queries, the monitoring components can be generated and deployed.
+As stated before, domain modeling and graph query definition are are done using EMF and \viatra{} technologies.
 In this chapter, I present how the monitoring components are generated from these artifacts. 
 
 \section{Generating classes from the metamodel}
+
+\subsection{Mapping an EClass to \protect\cpp }
+
+
+\todo{ábra szépítés}
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/eclass-to-cpp.pdf}
+		\caption{Mapping of two EClasses, one inherited from the other (Left: EClasses, right: \protect\cpp{} classes) }
+		\label{fig:eclass-to-cpp}
+	\end{center}
+\end{figure}
+
 
 The EClasses of the metamodel are mapped to various \cpp{} classes.
 From each EClass we generate three \cpp{} classes:
@@ -18,26 +30,69 @@ From each EClass we generate three \cpp{} classes:
 	\item A proxy class
 \end{itemize}
 
+
 The interface provides access to an instance of the EClass. 
 The local class implements the interface. It stores the attributes and references of the instances allocated to the local computing unit, and made them accessible by the methods of the implemented interface.
 The proxy class implements the interface, but can only be used to substitute remote objects in references to them. 
 Accessing its variables are not possible, because they are stored in another node. 
 
+\subsection{Mapping an EEnum to \protect\cpp }
+
+Enumerations are mapped to \cpp{} enum classes.
+
+\begin{figure}
+	\begin{center}
+		
+		\begin{minipage}[c]{\textwidth}
+		\begin{minipage}[c]{0.41\textwidth}
+			\includegraphics[width=\textwidth]{figures/eenum-to-cpp.pdf}
+		\end{minipage}
+			\hspace{0.05\textwidth}
+		\begin{minipage}[c]{0.25\textwidth}
+
+\begin{lstlisting}[language=C++]
+enum class Season{
+	SPRING = 0,
+	SUMMER = 1,
+	AUTUMN = 2,
+	WINTER = 3
+};
+\end{lstlisting}			
+		\end{minipage}
+		\end{minipage}
+		\caption{Mapping of an enumeration to \protect\cpp{} enum class }
+		\label{fig:eenum-to-cpp}
+	\end{center}
+\end{figure}
+
+\subsection{ Generating ModelRoot class and utilities }
+
+
+\todo{MEGÍRNI}
+
+
+
+
+
 \section{Overview of the query compilation workflow}
 
 The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. 
-First, the local search planner of the \viatra{} system creates a plan. 
-We complete the generated plan with types and other supplementary information and make a distributed version of the plans. 
-After that, we use additional optimization specialized for our execution mechanism to improve the execution. 
+First, vql files are parsed using EMF so its content is loaded into a Pattern Model.
+The Pattern Model are processed by \viatra{} and converted into PSystem representation of queries.
+After that, we extend this representation with type information, as type information is important in the \cpp{} generated code.
+Then, we create the plan for query execution; We use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
+We also use some optimizations later to improve distributed performance. 
 After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files.
+
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.5\textwidth]{figures/workflow.png}
-		\caption{Query comompilation workflow}
+		\includegraphics[width=0.8\textwidth]{figures/query-compilation-workflow.pdf}
+		\caption{Query compilation workflow}
 		\label{figure:query-compile-workflow}
 	\end{center}
 \end{figure}
+
 
 
 \section{Viatra plan}
@@ -45,7 +100,6 @@ After the fully optimized plan is ready, we can construct the generator model de
 The query file is processed by \viatra{}~\cite{viatra} and a local search plan is generated. 
 The local search planner of \viatra{} can be customized by specifying a cost function
 In case of local search, the plan is a sequence of search operation defined as an application of a constraint.
-
 
 \section{Completed plan}
 
