@@ -7,14 +7,20 @@ As stated before, domain modeling and graph query definition are done using EMF 
 In this chapter, I present how the monitoring components are generated from these artifacts.
 
 From the metamodel, the framework generates the classes, which enables the programmer to model the system's state in \cpp{}.
-Also, we generate the monitoring code for the system, which is basically the \cpp{} version of the planned graph queries. 
-These graph queries are evaluated on the maintained \cpp{} model.
+Also, we generate the monitoring code for the system, which is basically the \cpp{} implementation of the planned graph queries. 
+These graph queries are evaluated on the maintained \cpp{} model at runtime, to show if there are some problems in the system.
 
-\section{Generating classes from the metamodel}
+%%%%
+%%%%
+%%%%
+		\section{Generating classes from the metamodel}
+%%%%
+%%%%
+%%%%
 
 The domain model consists of packages (EPackage), enumerations (EEnum) and classes (EClass).
-From an EPackage, we generate a folder and every source file originated from the elements of the package will be generated in that folder. 
-We generate sources from each class and enumeration of the package, also we generate other artifacts for the package.
+From an EPackage, we generate a folder; Every source file originated from an elements from the package will be generated in that folder. 
+We generate sources from each class and enumeration of the package, also we generate other artifacts for the package, like helper classes, or model handling tools.
 
 
 \subsection{Mapping an EClass to \protect\cpp }
@@ -78,21 +84,39 @@ enum class Season{
 	\end{center}
 \end{figure}
 
-\subsection{ Generating ModelRoot class and utilities }
+\subsection{ Generating ModelRoot class }
+
+A class called ModelRoot is also generated.
+The purpose of ModelRoot is to handle the whole model of the system: 
+It contains the instances of the classes and it keeps track of the objects by identifier.
+It also provides a method to read in initial models from a json file.
+The ModelRoot class is also the connection point between the monitoring components and the model.
+
+\subsection{ Other sources }
+
+For each package the framework generates
+\begin{itemize}
+	\item a header file containing forward declarations for each generated classes
+	\item a header file including all the full declaration of classes
+	\item a header file containing string conversion methods for enumerations, as \cpp{} lacks this feature in enum classes.
+\end{itemize} 
 
 
-\todo{MEGÍRNI}
+
+%%%%
+%%%%
+%%%%
+		\section{Overview of the query compilation workflow}
+%%%%
+%%%%
+%%%%
 
 
-
-
-
-\section{Overview of the query compilation workflow}
 
 The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. 
-First, vql files are parsed using EMF so its content is loaded into a Pattern Model.
+First, vql files are parsed using EMF so their contents are loaded into a Pattern Model.
 The Pattern Model are processed by \viatra{} and converted into PSystem representation of queries.
-After that, we extend this representation with type information, as type information is important in the \cpp{} generated code.
+After that, we extend this representation with type information, as type information is more important in the \cpp{} generated code, than in the \viatra implementation of local search.
 Then, we create the plan for query execution; We use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
 We also use some optimizations later to improve distributed performance. 
 After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files.
@@ -107,6 +131,19 @@ After the fully optimized plan is ready, we can construct the generator model de
 \end{figure}
 
 
+
+\section{PSystem representation}
+The vql file is loaded into a PatternModel, which is a model for vql files. 
+The framework does not use this representation, but passes it to \viatra, which creates its inner representations of them called PSystem \cite{psystem}. The structure of PSystem representation is shown on Figure~\ref{fig:psystem}.
+
+\todo{ Ezt át kell rajzolni kevésbé undorítóbbra egyelőre placeholder }
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.6\textwidth]{figures/psystem.png}
+		\caption{Query compilation workflow}
+		\label{fig:psystem}
+	\end{center}
+\end{figure}
 
 \section{Viatra plan}
 
