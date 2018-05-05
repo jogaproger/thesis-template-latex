@@ -1,5 +1,5 @@
 %%
-\chapter{Domain modeling and goal definition in EMF and \viatra{}}
+\chapter{Domain modeling and monitoring goal definition in EMF and \viatra{}}
 %%
 
 In this chapter the creation of initial artifacts is presented: domain models and graph patterns.
@@ -31,7 +31,7 @@ Eclipse Modeling Framework (EMF) is an Eclipse based technology, which provides 
 Ecore \cite{ecore-package} for metamodeling (Ecore actually defines a meta meta-model for metamodeling), and various tools like java code generation from ecore models, etc.
 
 Ecore metamodeling is highly similar to defining class diagrams in UML, however, 
-Ecore is more suitable for data and structural modeling: Interfaces are not a part of it, even though it can be substituted by abstract classes.
+Ecore is more suitable for data and structural modeling: Interfaces are not a part of it, even though it can be substituted by abstract classes, as multiple inheritance is supported.
 
 The hierarchy of Ecore elements can be seen on figure \ref{fig:ecore-hierarchy}, while its structure on \ref{fig:ecore-relations}
 EObject is a base for everything, and its main purpuse to define the containment hierarchy of the model. 

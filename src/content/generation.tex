@@ -2,11 +2,20 @@
 \chapter{Generating query based monitoring components}
 %%
 
-After we designed the domain model of the system, and defined the graph queries, the monitoring components can be generated and deployed.
-As stated before, domain modeling and graph query definition are are done using EMF and \viatra{} technologies.
-In this chapter, I present how the monitoring components are generated from these artifacts. 
+After the domain model of the system is designed, and the graph queries are written, the monitoring components can be generated and deployed along with \cpp{} tools for modeling the domain.
+As stated before, domain modeling and graph query definition are done using EMF and \viatra{} technologies.
+In this chapter, I present how the monitoring components are generated from these artifacts.
+
+From the metamodel, the framework generates the classes, which enables the programmer to model the system's state in \cpp{}.
+Also, we generate the monitoring code for the system, which is basically the \cpp{} version of the planned graph queries. 
+These graph queries are evaluated on the maintained \cpp{} model.
 
 \section{Generating classes from the metamodel}
+
+The domain model consists of packages (EPackage), enumerations (EEnum) and classes (EClass).
+From an EPackage, we generate a folder and every source file originated from the elements of the package will be generated in that folder. 
+We generate sources from each class and enumeration of the package, also we generate other artifacts for the package.
+
 
 \subsection{Mapping an EClass to \protect\cpp }
 
@@ -21,42 +30,46 @@ In this chapter, I present how the monitoring components are generated from thes
 \end{figure}
 
 
-The EClasses of the metamodel are mapped to various \cpp{} classes.
+The EClasses of the metamodel are mapped to various \cpp{} classes, as depicted on \mbox{Figure~\ref{fig:eclass-to-cpp}}.
 From each EClass we generate three \cpp{} classes:
 
 \begin{itemize}
-	\item An interface
+	\item An interface (abstract class with only pure virtual methods in \cpp{})
 	\item A local class
-	\item A proxy class
+	\item A remote class
 \end{itemize}
 
 
-The interface provides access to an instance of the EClass. 
+The interface provides access to an instance of the EClass.
 The local class implements the interface. It stores the attributes and references of the instances allocated to the local computing unit, and made them accessible by the methods of the implemented interface.
-The proxy class implements the interface, but can only be used to substitute remote objects in references to them. 
+The remote class implements the interface, but are only used to substitute remote objects in references to them; 
 Accessing its variables are not possible, because they are stored in another node. 
 
 \subsection{Mapping an EEnum to \protect\cpp }
 
-Enumerations are mapped to \cpp{} enum classes.
+Enumerations are simply mapped to \cpp{} enum classes as depicted on Fig.\ref{fig:eenum-to-cpp}.
 
-\begin{figure}
+\begin{figure}[H]
 	\begin{center}
 		
 		\begin{minipage}[c]{\textwidth}
-		\begin{minipage}[c]{0.41\textwidth}
-			\includegraphics[width=\textwidth]{figures/eenum-to-cpp.pdf}
+		\begin{minipage}[r]{0.52\textwidth}
+			\hfill
+			\includegraphics[width=0.735\textwidth]{figures/eenum-to-cpp.pdf}
 		\end{minipage}
 			\hspace{0.05\textwidth}
 		\begin{minipage}[c]{0.25\textwidth}
-
 \begin{lstlisting}[language=C++]
+namespace Package{
+
 enum class Season{
 	SPRING = 0,
 	SUMMER = 1,
 	AUTUMN = 2,
 	WINTER = 3
 };
+
+}
 \end{lstlisting}			
 		\end{minipage}
 		\end{minipage}
