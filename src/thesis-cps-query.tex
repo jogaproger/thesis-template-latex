@@ -1,13 +1,11 @@
 % !TeX spellcheck = hu_HU
 % !TeX encoding = UTF-8
 % !TeX program = xelatex
-% TODO Change language to en_GB (recommended) or en_US for English documents
 \documentclass[11pt,a4paper,oneside]{report}             % Single-side
 %\documentclass[11pt,a4paper,twoside,openright]{report}  % Duplex
 
 \input{include/packages}
 
-%TODO Set the main variables
 \newcommand{\vikszerzoVezeteknev}{Szilágyi}
 \newcommand{\vikszerzoKeresztnev}{Gábor}
 
@@ -32,7 +30,6 @@
 \newcommand{\szerzoMeta}{\vikszerzoVezeteknev{} \vikszerzoKeresztnev} % egy szerző esetén
 %\newcommand{\szerzoMeta}{\vikszerzoVezeteknev{} \vikszerzoKeresztnev, \tdkszerzoB} % két szerző esetén
 
-%TODO Language configuration -- choose one
 % Beállítások magyar nyelvű dolgozathoz
 %\input{include/thesis-hu}
 % Settings for English documents
@@ -45,14 +42,10 @@
 %--------------------------------------------------------------------------------------
 \begin{document}
 
-%TODO These define guidelines -- remove these
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-%\include{include/guideline}
-%\include{include/project}
 
 \selectthesislanguage
 
-%TODO Titlepage -- choose one from below
+
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \include{include/titlepage}		   % Szakdolgozat/Diplomaterv címlap
 %\include{include/titlepage-tdk}	% TDK címlap
@@ -66,19 +59,13 @@
 
 % Declaration and Abstract
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\include{include/declaration} %TODO Hallgatói nyilatkozat -- TDK és OTDK esetén törlendő!
-\include{content/abstract}    %TODO Összefoglaló -- TDK és OTDK esetén nem kötelező
+\include{include/declaration} 
+\include{content/abstract}    
 
 
 % The main part of the thesis
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \pagenumbering{arabic}
-
-%TODO import your own content
-%\include{content/introduction}
-%\include{content/latex-tools}
-%\include{content/thesis-format}
-%\include{content/template-usage}
 
 \include{content/introduction}
 \include{content/motivation}

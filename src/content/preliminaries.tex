@@ -61,6 +61,7 @@ This model can be used to infer problems in the state of the system, so it can b
 \end{figure}
 
 \section{Graph pattern matching concepts}
+\label{section:gpmc}
 
 As runtime analysis of the system is based on the runtime model, we needs to identify problems in the graph model. 
 Graph pattern matching offers a solution for this problem. 
@@ -106,23 +107,23 @@ We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to i
 
 \section{Local search}
 
-\todo{ami innentől a preliminaries az még át lesz írva }
+Local search is a method for solving problems involving a search space. 
+Local search starts from a candidate solution for a problem, then searches by applying local changes: moving to neighboring locations until solutions are found.
 
-Local search~\cite{bur-marton-msc} is a method for solving problems involving a search space. 
+Local search can also be used to provide matchings for a graph pattern in a graph, it is also a memory-efficient alternative for rete algorithm in \viatra ~\cite{bur-marton-msc}.
 
-It also can be used to provide matchings of a graph pattern in a graph. 
-It is a depth-first search in the space of variable bindings. 
-In the root of the search tree all the variables are unbound. 
-Then with each constraint, we add a new level for the tree.
-The child of a variable binding is all the other variable binding where 
-\begin{itemize}
-	\item The bound variables of the parent are bound to the same values as the corresponding variable in the child
-	\item The constraint is satisfied by the child
-\end{itemize}
+One of the possibility is the following (also used in ~\cite{bur-marton-msc}):
+Assume, that a graph pattern is given as stated before in section~\ref{section:gpmc}.
+Then it is a conjunction of expressions (bodies) that existentially quantifies the variables then checks if the constraints are met.
+We can evaluate each body of the pattern independently and merge their results.
+The evaluation of each body will be based on local search.
 
-The search tree can be traversed without materializing it with depth-first search. This means, that the elements of the search tree are calculated on the fly, by modifying the parent variable binding.
+\todo{innentől kicsit pontosítani és befejezni, frame fogalmát felhasználni valahogy}
+Our problem then is the following: find all the variable bindings, which satisfies the constraints of the body.
+The search space consists of all the possible variable bindings (leaving a variable unbind is also a possibility). 
+We start from 
 
-To optimize the size of the search tree the order of the constraints must be chosen properly. 
+
 
 \section{Distributed platform}
 
