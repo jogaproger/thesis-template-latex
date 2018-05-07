@@ -129,17 +129,14 @@ We go through the constraints and with each constraint, we do one of the followi
 
 
 
-
-
-
 \section{Distributed platform}
 
 % adatok diszjunkt halmazokra bontva különböző csomópontra
 % az algoritmusok is elosztottak, nem lesz összegyűjtve az infó, úgy van kiértékelve, hogy nincs aki mindent látna a rendszerből
 
 As cyber-physical systems are distributed we must deal with the sensor data coming from different sensors at different computation units of the system. 
-Sending the sensor data to one computation unit and evaluate on that cause different problems: 
-Sensor data can be huge to send it through the network, the central node can be a SPOF, etc. 
+Sending the sensor data to one computation unit and evaluate on that can cause different problems: 
+Sensor data can be too huge to be able to be sent over network, the central node can be a SPOF, etc. 
 In the presented framework the live model is distributed on the different computation units and the graph pattern matching algorithm itself runs in a distributed way. 
 This eliminates the problem of central computers, but introduces complexity, that we must handle.
 
@@ -149,8 +146,8 @@ In this thesis, the phrase \emph{computing module} is used to denote a physical 
 
 Distributed graph models can be architected in various ways. 
 In our framework each node in the graph is allocated to a computing element. 
-On that computing element, call that node a \emph{local node}. 
-In the context of other computing modules this node is a \emph{remote node}. 
+On that computing element, that node is called a \emph{local node}. 
+In the context of other computing modules it is called a \emph{remote node}. 
 Edges are stored in the computing module of their source node; 
 If their destination node is not a local node on that node, a \emph{proxy node} is used to substitute the remote node.
 
