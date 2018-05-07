@@ -91,7 +91,7 @@ We built up the expression defining the graph pattern the following way.
 An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \vee B_2 \vee \dots$). 
 A \emph{pattern body} is an existentially quantified expression, quantified over a disjunction of constraints ($\exists{} v_1, v_2, \dots : C_1 \wedge{} C_2 \wedge \dots$).
 
-\viatra{} Query Language syntax conform with this structure as this restriction leads to more easily understandable .
+Viatra Query Language syntax conform with this structure as this restriction leads to more easily understandable .
 This restriction also helps our expressions to become evaluable using local search.
 
 We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textural languages (see VQL) is used in the framework.
@@ -114,14 +114,21 @@ Local search can also be used to provide matchings for a graph pattern in a grap
 
 One of the possibility is the following (also used in ~\cite{bur-marton-msc}):
 Assume, that a graph pattern is given as stated before in section~\ref{section:gpmc}.
-Then it is a conjunction of expressions (bodies) that existentially quantifies the variables then checks if the constraints are met.
+Then it is a conjunction of expressions (bodies) that existentially quantifies the variables, then checks if the constraints are met.
 We can evaluate each body of the pattern independently and merge their results.
 The evaluation of each body will be based on local search.
 
-\todo{innentől kicsit pontosítani és befejezni, frame fogalmát felhasználni valahogy}
-Our problem then is the following: find all the variable bindings, which satisfies the constraints of the body.
+Our problem now is the following: find all the variable bindings, which satisfies the constraints of the body.
 The search space consists of all the possible variable bindings (leaving a variable unbind is also a possibility). 
-We start from 
+We start from all variable being unbound. 
+We go through the constraints and with each constraint, we do one of the following:
+\begin{itemize}
+	\item If all the variables referred by the constraint are bound, then we check if they satisfy the constraint.
+	\item If a variable is unbound then we iterate through all the possible values that satisfies the constraint, and for each value we bind it to the variable and follow the algorithm
+\end{itemize}
+
+
+
 
 
 
