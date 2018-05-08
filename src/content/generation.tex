@@ -133,9 +133,19 @@ After the fully optimized plan is ready, we can construct the generator model de
 
 
 \subsection{PSystem representation}
-The vql file is loaded into a PatternModel, which is a model for vql files. 
-The framework does not use this representation, but passes it to \viatra, which creates its inner representations of them called PSystem \cite{psystem}. 
 
+
+The vql file is loaded into a PatternModel, which is a model for vql files. 
+The framework does not use this representation, but passes it to \viatra, which creates its own representations of it called PSystem. \cite{psystem}. 
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.6\textwidth]{figures/psystem.pdf}
+		\caption{PSystem's structure}
+		\label{fig:psystem}
+	\end{center}
+\end{figure}
 The structure of PSystem representation is shown on Figure~\ref{fig:psystem}. 
 As their implementation is hidden behind interfaces, most of the refrences means getter functions (In Xtend, gettern functions can be used with field access syntax like \csharp{} properties). 
 Graph patterns are represented by a PQuery. 
@@ -146,6 +156,7 @@ PDisjunctions play role in Query rewriting, where the bodies of a PQuery gets op
 PBody consists of PConstraints. 
 PConstraint is a basic interface for various constraints. 
 Altough constraints refer to variables, all variablesin a PBody can be accessed from PBody.
+
 A variable can be unified into another variable. 
 This can happen when equality constraint is used between two variable: 
 Equality constraint is omitted, one of the variable gets unified into the other, and other constraints do not have to be changed.
@@ -153,27 +164,71 @@ Equality constraint is omitted, one of the variable gets unified into the other,
 %TODO Az ábra még pontosítható
 \todo{ Az ábra még pontosítható}
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=0.6\textwidth]{figures/psystem.pdf}
-		\caption{PSystem's structure}
-		\label{fig:psystem}
-	\end{center}
-\end{figure}
 
 \subsection{Typed Extension of PSystem}
 
-\subsection{Viatra plan}
+To make PSystem more usable we extend it with additional information, mainly with type information for variables and parameters.
+For this the types of the variables and parameters must be infered based on type constraints of the graph pattern.
 
-The query file is processed by \viatra{}~\cite{viatra} and a local search plan is generated. 
-The local search planner of \viatra{} can be customized by specifying a cost function
-In case of local search, the plan is a sequence of search operation defined as an application of a constraint.
+First the types of the variables must be infered. 
+First, we collect all the type constraints, that the variable must satisfy.
+We do this, by collecting all the variables that are the same as the variable( via equality constraint eg. ), 
+then collect the constraints refering to them.
+From this we can create a set of candidate types.
+Then we choose the type as the following. 
+If the types contains classes and datatypes, then we throw an error.
+If all the types are data types, then they must be compatible with each other (integral types, or the same type).
+In this case, the most specific is choosen. If there are uncompatible types, then we throw an error.
+If all the types are EClass types, then we select the most general class, that are compatible (extends it or is the same) of all the classes and choose that.
+If we cannot choose such EClass, or there are multiple classes that satisfies this, then we throw an error (The later can happen eg., when there are two classes, A and B, and exists two class, that are a descendant of both of them).
 
-\subsection{Completed plan}
 
-\viatra{} generated plans are not intended for external usage. 
-We need to complete it with additional information to use it for our purposes. 
-One of the main concern is type information. To obtain type information we use the constraints to deduce the type of a variable. 
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.4\textwidth]{figures/multiple-inheritance-problem.pdf}
+		\caption{Problems with type inference in case of multiple inheritance}
+		\label{fig:multiple-inheritance-problem}
+	\end{center}
+\end{figure}
+
+If the types of the variables are known then the types of the parameters can be infered. 
+For this, we collect the variables that represents this parameter from each body.
+As the parameters value can be any of the variable, we choose the type, that generalizes them.
+
+We also maintain additional information in our representation. 
+Bodies also maintain the relationship between variables and parameters. 
+In PSystem, this information is not directly available, parameters and variables need to be matched by name.
+
+\subsection{Search planning}
+
+After we have extended PSystem with the needed information, we can plan how the pattern will be executed.
+From a set of constraints that declaratively defines the pattern we need to create an imperative sequence of search operations.
+
+For this, we use the local search planner of \viatra{}.
+This planner takes a cost function, then creates a permutation of constraints that minimizes the cost function. 
+After this permutation is achieved, then search operations will be created by mapping the constraints to them considering their position.
+The cost function must give an approximated cost of applying a constraint based on the variables bound before the application and other information (Like statistics on the instance model, that can only be available at runtime, so \viatra{} can utilize them, but we can't as we generate the monitoring components at design time). 
+
+For the different constraint applications we use the following search operations.
+
+\subsubsection{Type constraint}
+If a variable must be of a given type, then the following two search operation can be the next:
+If the variable is bound, we need to check wether the already bound value is of that type, we denote this CheckInstanceOf(Var, Type).
+If the variable is unbound, we need to iterate over the instances of the type and follow the algorithm, we denote this ExtendInstanceOf(Var, Type) ).
+
+
+\subsubsection{Reference and attribute constraint}
+
+If a structural feature is \todo{befejezni innentől ezt a fejezetet}
+
+
+\subsubsection{Negative pattern application}
+
+
+\subsubsection{Transitive closure}
+
+
+
 
 
 \subsection{Additional optimization}

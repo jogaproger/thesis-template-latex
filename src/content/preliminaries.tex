@@ -123,10 +123,17 @@ The search space consists of all the possible variable bindings (leaving a varia
 We start from all variable being unbound. 
 We go through the constraints and with each constraint, we do one of the following:
 \begin{itemize}
-	\item If all the variables referred by the constraint are bound, then we check if they satisfy the constraint.
-	\item If a variable is unbound then we iterate through all the possible values that satisfies the constraint, and for each value we bind it to the variable and follow the algorithm
+	\item Check operation: If all the variables referred by the constraint are bound, then we check if they satisfy the constraint. If yes, we follow the algorithm, if not we backtrack.
+	\item Extend operation: If a variable is unbound then we iterate through all the possible values that satisfies the constraint, and for each value we bind it to the variable and follow the algorithm. After all the possible values are done, we backtrack.
 \end{itemize}
 
+This structure leads to a search tree.
+It can be easily proved, that at the ith of the tree, the first x constraint is satisfied, as a child node not modifies already bound variables.
+This means, that after the last constraint, the variable binding satisfies all the constraints, so it can be projected to the variables to find a solution.
+It can also be proved, that all of the variable bindings satisfying the constraints can be found: 
+Consider this variable bindings, and call this the goal binding, and start the algorithm: each extend operation can bind the unbound variables as in the goal binding, and each check operation 
+
+We use depth first search, because it uses less memory, and it can be easily used to synthesize code, as the layers are well defined.
 
 
 \section{Distributed platform}
