@@ -13,6 +13,16 @@ Still to use find matches for graph patterns, we need additional components to b
 In this chapter, I show the workflow of query code genetion in the framework. 
 As stated before, graph queries are given in vql (Viatra Query Language).
 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{figures/query-compilation-workflow.pdf}
+		\caption{Query compilation workflow}
+		\label{figure:query-compile-workflow}
+	\end{center}
+\end{figure}
+
+
 \section{Overview}
 
 The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. 
@@ -21,16 +31,8 @@ The Pattern Model are processed by \viatra{} and converted into PSystem represen
 After that, we extend this representation with type information, as type information is more important in the \cpp{} generated code, than in the \viatra implementation of local search.
 Then, we create the plan for query execution; We use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
 We also use some optimizations later to improve distributed performance. 
-After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files.
+After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files from them.
 
-
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=0.8\textwidth]{figures/query-compilation-workflow.pdf}
-		\caption{Query compilation workflow}
-		\label{figure:query-compile-workflow}
-	\end{center}
-\end{figure}
 
 
 
@@ -41,13 +43,14 @@ The vql file is loaded into a PatternModel, which is a model for vql files.
 The framework does not use this representation, but passes it to \viatra, which creates its own representations of it called PSystem. \cite{psystem}. 
 
 
-\begin{figure}
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=0.6\textwidth]{figures/psystem.pdf}
 		\caption{PSystem's basic structure}
 		\label{fig:psystem}
 	\end{center}
 \end{figure}
+
 The structure of PSystem representation is shown on Figure~\ref{fig:psystem}. 
 As their implementation is hidden behind interfaces, most of the refrences means getter functions (In Xtend, gettern functions can be used with field access syntax like \csharp{} properties). 
 Graph patterns are represented by a PQuery. 
@@ -63,8 +66,6 @@ A variable can be unified into another variable.
 This can happen when equality constraint is used between two variable: 
 Equality constraint is omitted, one of the variable gets unified into the other, and other constraints do not have to be changed.
 
-%TODO Az ábra még pontosítható
-\todo{ Az ábra még pontosítható}
 
 
 \section{Typed Extension of PSystem}
@@ -84,11 +85,12 @@ In this case, the most specific is choosen. If there are uncompatible types, the
 If all the types are EClass types, then we select the most general class, that are compatible (extends it or is the same) of all the classes and choose that.
 If we cannot choose such EClass, or there are multiple classes that satisfies this, then we throw an error (The later can happen eg., when there are two classes, A and B, and exists two class, that are a descendant of both of them).
 
+\todo{ Az ábra még pontosítható}
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.4\textwidth]{figures/multiple-inheritance-problem.pdf}
-		\caption{Problems with type inference in case of multiple inheritance}
+		\caption{One of the problems with type inference in case of multiple inheritance}
 		\label{fig:multiple-inheritance-problem}
 	\end{center}
 \end{figure}
@@ -104,7 +106,7 @@ In PSystem, this information is not directly available, parameters and variables
 \section{Search planning}
 
 \subsection{Creating a basic plan}
-After we have extended PSystem with the needed information, we can plan how the pattern will be evaluated at runtime, ie.\ how the queries will be generated.
+After we have extended PSystem with the needed information, we can plan how the pattern will be evaluated at runtime, ie.\ how the queries code will process the graph and produce matches for the pattern.
 From a set of constraints that declaratively defines the pattern we need to create an imperative sequence of search operations.
 
 For this, we use the local search planner of \viatra{}.

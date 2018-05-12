@@ -51,7 +51,7 @@ It is updated with sensor data and information from other sources, so the model 
 This model can be used to infer problems in the state of the system, so it can be used for runtime verification.
 
 
-
+\todo{Értelmes ábrát ide}
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.75\textwidth]{figures/live-models.pdf}
@@ -70,7 +70,8 @@ The goal of graph pattern matching is to find all the subgraphs of a graph meeti
 A \emph{graph pattern} is given by a \emph{restricted} first-order logical expression, where variables refer to vertices of the graph or data values (string, numeric, enumeral).
 Free(not quantified) variables are called \emph{parameters}.  
 A \emph{pattern match} is a variable binding, where variables are assigned to graph nodes and data values in a way, that satisfies the expression.
-A \emph{graph query} is a program or execution plan capable of calculating the matches of a graph pattern on a given graph. 
+A pattern's \emph{matchset} on a graph is the set of all the possible pattern match (ie. the truth set of the graph pattern if we view it as a predicate on the parameters).
+A \emph{graph query} is a program or execution plan capable of calculating the matchset of a graph pattern on a given graph. 
 Planning the most efficient graph query is crucial, because the performance of the verification depends on it.
 
 Graph patterns are built up from basic constraints. 
@@ -91,7 +92,7 @@ We built up the expression defining the graph pattern the following way.
 An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \vee B_2 \vee \dots$). 
 A \emph{pattern body} is an existentially quantified expression, quantified over a disjunction of constraints ($\exists{} v_1, v_2, \dots : C_1 \wedge{} C_2 \wedge \dots$).
 
-Viatra Query Language syntax conform with this structure as this restriction leads to more easily understandable .
+Viatra Query Language syntax conform with this structure as this restriction leads to more easily understandable graph queries.
 This restriction also helps our expressions to become evaluable using local search.
 
 We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textural languages (see VQL) is used in the framework.
@@ -110,15 +111,39 @@ We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to i
 Local search is a method for solving problems involving a search space. 
 Local search starts from a candidate solution for a problem, then searches by applying local changes: moving to neighboring locations until solutions are found.
 
-Local search can also be used to provide matchings for a graph pattern in a graph, it is also a memory-efficient alternative for rete algorithm in \viatra ~\cite{bur-marton-msc}.
+Local search can also be used to provide a matchset for a graph pattern in a graph.
+It is also a memory-efficient alternative for rete algorithm in \viatra{}~\cite{bur-marton-msc}.
 
-One of the possibility is the following (also used in ~\cite{bur-marton-msc}):
+One of the possibility (also used in ~\cite{bur-marton-msc} and our framework) is the following :
 Assume, that a graph pattern is given as stated before in section~\ref{section:gpmc}.
 Then it is a conjunction of expressions (bodies) that existentially quantifies the variables, then checks if the constraints are met.
-We can evaluate each body of the pattern independently and merge their results.
-The evaluation of each body will be based on local search.
 
+\begin{equation}
+\begin{array}{@{}r@{\,}l@{\,}l@{}}
+foo &= bar &+ baz\\
+&= bar &+ quux
+\end{array}
+\end{equation}
+
+
+\begin{equation}
+\begin{array}{@{}r@{}l@{}l@{}l@{}l@{}l@{}}
+Pattern(p1, p2, \dots) = \;
+& \exists{x_1} & \exists{x_2}... \: & 
+(Constr_{11}(\bar{p},\bar{x} ) & \, \wedge \, Constr_{12}(\bar{p},\bar{x} ) & \, \wedge \, \dots{}) \: \vee \\
+
+& \exists{y_1} & \exists{y_2}... \: & 
+(Constr_{21}(\bar{p},\bar{y} ) & \, \wedge \, Constr_{22}(\bar{p},\bar{y} ) & \, \wedge \, \dots{}) \: \vee \\
+& \dots{}
+\end{array}
+\end{equation}
+
+We can find the truth set of this expression, by finding the truth sets of all the bodies as distinct predicates on the parameters, and taking their union.
 Our problem now is the following: find all the variable bindings, which satisfies the constraints of the body.
+
+
+
+
 The search space consists of all the possible variable bindings (leaving a variable unbind is also a possibility). 
 We start from all variable being unbound. 
 We go through the constraints and with each constraint, we do one of the following:
