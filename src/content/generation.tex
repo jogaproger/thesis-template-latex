@@ -17,12 +17,18 @@ The input for the generation is the EMF Ecore metamodel of the system, so it mus
 %%%%
 %%%%
 
-The domain model consists of packages (EPackage), enumerations (EEnum) and classes (EClass).
+The domain model consists of 
+\begin{itemize}
+	\item packages (EPackage)
+	\item classes (EClass) 
+	\item and enumerations (EEnum).
+\end{itemize}
+
 From an EPackage, we generate a folder; Every source file originated from an elements from the package will be generated in that folder. 
 We generate sources from each class and enumeration of the package, also we generate other artifacts for the package, like helper classes, or model handling tools.
 
 
-\section{Mapping an EClass to \protect\cpp }
+\section{Mapping EClass to \protect\cpp{} classes}
 
 
 \todo{ábra szépítés}
@@ -50,7 +56,7 @@ The local class implements the interface. It stores the attributes and reference
 The remote class implements the interface, but are only used to substitute remote objects in references to them; 
 Accessing its variables are not possible, because they are stored in another node. 
 
-\section{Mapping an EEnum to \protect\cpp }
+\section{Mapping an EEnums to \protect\cpp enumerations }
 
 Enumerations are simply mapped to \cpp{} enum classes as depicted on Fig.\ref{fig:eenum-to-cpp}.
 
@@ -124,11 +130,11 @@ struct EnumHelper< ::Package::Season> {
 
 \section{ Generating ModelRoot class }
 
-A class called ModelRoot is also generated.
-The purpose of ModelRoot is to handle the whole model of the system: 
+A class called \texttt{ModelRoot} is also generated.
+The purpose of \texttt{ModelRoot} is to handle the whole model of the system: 
 It contains the instances of the classes and it keeps track of the objects by identifier.
 It also provides a method to read in initial models from a json file.
-The ModelRoot class is also the connection point between the monitoring components and the model.
+The \texttt{ModelRoot} class is also the connection point between the monitoring components and the model.
 
 \section{ Other sources }
 

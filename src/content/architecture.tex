@@ -7,10 +7,11 @@
 %% Futásidejű dolgok és kódgenerálás is!
 %%
 
-In this chapter, the approach to monitoring of cyber-physical systems is presented, used by the developed framework. 
+This chapter provides an overview of the framework, and shows the approach to monitoring cyber-physical systems, used by the framework.
 The architecture of the framework is depicted on figure~\ref{fig:approach}. 
-The framework has a design-time and runtime part.
+The tasks of the framework can be divided into two part: design-time and runtime.
 The design time part consists of the process of creating the artifacts, mainly program sources which will be responsible for runtime verification.
+The runtime part is about how these generated components behave with their 
 
 \begin{figure}[h]
 	\begin{center}
@@ -22,13 +23,13 @@ The design time part consists of the process of creating the artifacts, mainly p
 
 \section{Design time}
 
-At first, the developer of the cps must design the models based on the structure of the target system using EMF Ecore modeling. 
+At first, the developer of the system must design the models based on the structure of the target system using EMF Ecore modeling. 
 The meta model of the living model defines the types of the graph elements, the possible edges between instances of given types, and attributes of instances of a given type. 
 We generate \cpp{} source code from these models, that can be used to build up and update the living model of the system.
 
 Then monitoring goals are defined as graph patterns. 
 As patterns can refer to the meta model, it is a prerequisite for pattern definition. 
-For graph pattern definition, the query language of \viatra{} is used (Viatra Query Language). 
+For graph pattern definition, the query language of \viatra{} is used (Viatra Query Language, VQL). 
 From these patterns we create monitoring plans (local search plans). 
 We use these plans to generate the source code of the monitoring components.
 

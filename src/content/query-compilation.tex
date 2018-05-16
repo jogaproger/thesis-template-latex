@@ -11,7 +11,7 @@
 After the model handling code is generated, the user of the framework can build and maintain the live model at runtime. 
 Still to use find matches for graph patterns, we need additional components to be generated. 
 In this chapter, I show the workflow of query code genetion in the framework. 
-As stated before, graph queries are given in vql (Viatra Query Language).
+As stated before, graph queries are given in VQL (Viatra Query Language).
 
 
 \begin{figure}[H]
@@ -25,11 +25,11 @@ As stated before, graph queries are given in vql (Viatra Query Language).
 
 \section{Overview}
 
-The compilation of the queries of the CPS is depicted in fig. \ref{figure:query-compile-workflow}. 
-First, vql files are parsed using EMF so their contents are loaded into a Pattern Model.
+The compilation of graph patterns is depicted in fig. \ref{figure:query-compile-workflow}. 
+First, VQL files containing the patterns are parsed using EMF so their contents are loaded into a Pattern Model.
 The Pattern Model are processed by \viatra{} and converted into PSystem representation of queries.
-After that, we extend this representation with type information, as type information is more important in the \cpp{} generated code, than in the \viatra implementation of local search.
-Then, we create the plan for query execution; We use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
+After that, we extend this representation with type information, as type information is more important in the \cpp{} generated code, than in the \viatra{} implementation.
+Then, we create the plan for query execution; we use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
 We also use some optimizations later to improve distributed performance. 
 After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files from them.
 
@@ -39,7 +39,7 @@ After the fully optimized plan is ready, we can construct the generator model de
 \section{PSystem representation}
 
 
-The vql file is loaded into a PatternModel, which is a model for vql files. 
+The VQL file is loaded into a PatternModel. 
 The framework does not use this representation, but passes it to \viatra, which creates its own representations of it called PSystem. \cite{psystem}. 
 
 
@@ -52,7 +52,7 @@ The framework does not use this representation, but passes it to \viatra, which 
 \end{figure}
 
 The structure of PSystem representation is shown on Figure~\ref{fig:psystem}. 
-As their implementation is hidden behind interfaces, most of the refrences means getter functions (In Xtend, gettern functions can be used with field access syntax like \csharp{} properties). 
+As their implementation is hidden behind interfaces, most of the refrences means getter functions (In Xtend, getter functions can be used with field access syntax like \csharp{} properties). 
 Graph patterns are represented by a PQuery. 
 A PQuery has a parameter list. 
 The most important attribute of parameters are its names. 
@@ -60,17 +60,17 @@ A PQuery consists of a PDisjunction, which consists of a set of PBodies.
 PDisjunctions play role in Query rewriting, where the bodies of a PQuery gets optimized, or changed other ways.
 PBody consists of PConstraints. 
 PConstraint is a basic interface for various constraints. 
-Altough constraints refer to variables, all variablesin a PBody can be accessed from PBody.
+Altough constraints refer to variables, all variables in a PBody can be accessed from PBody.
 
-A variable can be unified into another variable. 
-This can happen when equality constraint is used between two variable: 
-Equality constraint is omitted, one of the variable gets unified into the other, and other constraints do not have to be changed.
+%A variable can be unified into another variable. 
+%This can happen when equality constraint is used between two variable: 
+%Equality constraint is omitted, one of the variable gets unified into the other, and other constraints do not have to be changed.
 
 
 
 \section{Typed Extension of PSystem}
 
-To make PSystem more usable we extend it with additional information, mainly with type information for variables and parameters.
+We extend PSystem with additional information, mainly with type information for variables and parameters.
 For this the types of the variables and parameters must be infered based on type constraints of the graph pattern.
 
 First the types of the variables must be infered. 
@@ -103,11 +103,16 @@ We also maintain additional information in our representation.
 Bodies also maintain the relationship between variables and parameters. 
 In PSystem, this information is not directly available, parameters and variables need to be matched by name.
 
-\section{Search planning}
+\section{Search plan calculation}
 
 \subsection{Creating a basic plan}
 After we have extended PSystem with the needed information, we can plan how the pattern will be evaluated at runtime, ie.\ how the queries code will process the graph and produce matches for the pattern.
-From a set of constraints that declaratively defines the pattern we need to create an imperative sequence of search operations.
+
+The first step is flattening and normalization. 
+The purpose of flattening is to replace pattern calls with their code, as this leads more efficient code, than handling the pattern as a black box.
+At normalization, equality constraints of variable are handled: equal variables are unified, and equality constraint is omitted.
+
+After flattening and normalization, we needs to create the search plan for each body of the pattern. From a set of constraints that declaratively defines the body we need to create an imperative sequence of search operations.
 
 For this, we use the local search planner of \viatra{}.
 This planner takes a pattern and a cost function, then creates a permutation of constraints that minimizes the cost function. 
@@ -118,11 +123,18 @@ For the different types of constraint applications we use the following search o
 
 \todo{extend és check preliminariasba berakni, majd itt visszahivatkozni rá, ismételni!}
 
+
+
+\subsubsection{Equality and pattern find}
+These two types of constraints are never appear in this phase, as they are both omitted 
+Equality constraint is \emph{always} omitted in our framework because of flattening: if there are two variable with the same value, they are unified.
+
+
 \subsubsection{Type constraint}
 We apply a type constraint the following way:
 
 \begin{itemize}
-\item If the variable is bound, we need to check wether the already bound value is of that type, we denote this CheckInstanceOf(Var, Type).
+\item If the variable is bound, we need to check whether the already bound value is of that type, we denote this CheckInstanceOf(Var, Type).
 \item If the variable is unbound, we need to iterate over the instances of the type and follow the algorithm, we denote this ExtendInstanceOf(Var, Type) ).
 \end{itemize}
 
@@ -132,12 +144,20 @@ We apply a type constraint the following way:
 Reference and attribute relations are called structural features.
 We apply the constraint of a structural feature the following way:
 \begin{itemize}
-	\item If the source and target variable is bound too, then we just checks, wether the constraint is satisfied by those constraint. \mbox{(CheckNavigation(from, to, structural feature))}
-	\item If the source variable is bound and the target is unbound, then we extend along using the source variable for all its elements (or single element, if it does not have multiplicity). \mbox{(ExtendNavigation(from, to, structural feature))}
+	\item If the source and target variable is bound too, then we just checks, whether the constraint is satisfied by those constraint. 
+	
+	\mbox{(CheckNavigation(from, to, structural feature))}
+	\item If the source variable is bound and the target is unbound, then we extend along using the source variable for all its elements (or single element, if it does not have multiplicity). 
+	
+	\mbox{(ExtendNavigation(from, to, structural feature))}
 	\item If the target variable is bound and the source is unbound, then we check, if the structural feature is a reference having an opposite reference. 
 	\begin{itemize}
-		\item If it is, then we can navigate along the opposite reference, so we can use it to extend to the source variable. \mbox{(ExtendNavigation(to, from, opposite structural feature))}
-		\item If not, we add two search operation: ExtendInstanceof(type of src, src), CheckNavigation(src, target). 
+		\item If it is, then we can navigate along the opposite reference, so we can use it to extend to the source variable. 
+		
+		\mbox{ExtendNavigation(to, from, opposite structural feature)}
+		\item If not, we add two search operation: 
+		
+		ExtendInstanceof(type of src, src), CheckNavigation(src, target). 
 	\end{itemize}
 
 	\item If both of  target variable and the source is unbound, then we use the next 2 search operation: ExtendInstanceof(type of src, src), ExtendNavigation(src, target)
@@ -145,21 +165,49 @@ We apply the constraint of a structural feature the following way:
 \end{itemize}
 
 
-\subsubsection{Negative pattern application and Transitive closure}
+\subsubsection{Negative pattern call and transitive closure}
+
+We only apply these constraints, when all the referred variables are bound, so we only compile them into check operations:
+\begin{itemize}
+	\item Negative pattern application $\rightarrow{}$ NegativePatternCheck(pattern, $v_1$, $v_2$, \dots{} )
+	\item Transitive closure $\rightarrow{}$ BinaryTransitiveClosureCheck(pattern, $v_1$, $v_2$).
+\end{itemize}
+
+\subsubsection{Count pattern matches}
+
+This constraint can be applied, when all the variables given to the sub pattern as parameter are bound. 
+The count of the matches is stored in another variable. 
+We choose the search operation based on this variable.
+
+\begin{itemize}
+	\item If this variable is bound, then we create a check operation: 
+	CheckPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
+	\item If this variable is not bound, then we create an extend operation: 
+	ExtendPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
+\end{itemize}
 
 
-\subsubsection{Transitive closure}
-
-
-\subsubsection{count find}
-
-
-\subsubsection{Example for a search planning on a pattern }
-
+\subsubsection{Inequality}
+Inequality is only supported as a check operation: CheckInequality(x, y)
 
 
 \subsection{Expanding the plan for distributed evaluation}
+Now the sequence of search operation can be used to find the matches of a pattern on a single computer, but in a distributed setup, we need additional steps to make the plan correct.
+The following search operations can cause problems in a distributed setup:
+\begin{itemize}
+	\item CheckNavigation	
+	\item ExtendNavigation
+	\item ExtendInstanceOf
+\end{itemize}
 
+CheckNavigation and ExtendNavigation need the source object to be available at the computation unit, because references and attributes are stored on local objects.
+ExtendInstanceOf needs to expa
+
+
+
+
+
+\subsubsection{Example for search plan creation on a pattern }
 
 \subsection{Additional optimization}
 
@@ -182,6 +230,7 @@ private pattern connected(a : RailRoadElement, b : RailRoadElement){
 In the following examples i will use this query as an example to demonstrate how the application of this query can be replaced by an other operation.
 
 \paragraph{Counting reference pattern} 
+Instead of counting a reference pattern bounding the source variable, we can insert a search operation counting the references.
 
 \begin{lstlisting}[language = vql]
 1 == count find connected(a, _);
@@ -189,7 +238,7 @@ In the following examples i will use this query as an example to demonstrate how
 
 
 \paragraph{Negative application of a reference pattern}
-
+Instead of checking wether a reference pattern matches we can simply create a search operation which checks the existence of the reference.
 \begin{lstlisting}[language = vql]
 neg find connected(a, _);
 \end{lstlisting}
@@ -205,8 +254,9 @@ As the original plan is generated by the localsearch planner of \viatra{}, there
 
 
 
-\section{C++ code generation}
+\section{\protect\texttt{C++} code generation}
 
+\subsection{Query code generation}
 The completed and optimized plan are used to generate \cpp{} code. 
 Two main methods can be used to run local search plan in case of generated code. 
 One is to generate the plan as a data structure and create an interpreter that uses that plan to find matches. 
@@ -214,6 +264,9 @@ The other is to generate the code directly from the plan.
 The first method is good if we want to change the plan at runtime, but the interpreter itself introduces an overhead, causing performance to be slower.
 We used the later, because we don't change the plan at runtime.
 
+\subsection{Generating helper data structures}
+
+\todo{ interpretált és direkt kódgenerálás, frame-ek, frameset-ek, matchset-ek, stb }
 
 
 

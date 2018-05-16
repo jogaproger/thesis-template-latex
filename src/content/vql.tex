@@ -1,0 +1,304 @@
+\chapter{Graph pattern definition in \viatra{} query language (VQL)}
+
+As stated before, graph patterns can be defined using \viatra{} Query Language (VQL). 
+The language syntax is simple, altough complex queries are not always self evident how to be expressed.
+
+\subsection{Pattern definition}
+Patterns and its bodies can be given by the \emph{pattern} keyword. 
+Parameters must be specified after the parameter name in round brackets. 
+Bodies of the pattern are given in curly brackets, separeted by the \texttt{or} keyword
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1, p2: Type2){
+... // Constraints for first body
+} or {
+... // Constraints for second body
+} ...
+\end{lstlisting}
+\end{minipage}
+
+
+\subsection{Constraints}
+Constraints are given like statements. 
+Each constraint is followed by a semicolon.
+
+\vspace{\abovedisplayskip}
+\begin{minipage}{\textwidth}
+Type constraint can be given by specifying the type, then the object in round brackets.
+\begin{lstlisting}[language=vql]
+pattern patternName( o ){
+	Type(o);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+\begin{minipage}{\textwidth}
+Reference constraint can be given by specifying which type's which reference must be checked, then giving the source and target variables in round brackets:
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Person, p2: Person ){
+	Person.friend(p1, p2);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+\begin{minipage}{\textwidth}
+Other patterns can be used as constraint with the \texttt{find} keyword:
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1, p2: Type2, p3: Type3 ){
+	find otherPatternName(p1, p2);
+	find otherPatternName(p2, p3);
+}
+\end{lstlisting}
+
+Also we can use underscore instead of specifying parameters. 
+This way the constraint is satisfied, if the pattern matches with anything in the place of underscores (existential quantification).
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+find otherPatternName(p1, _);
+}
+\end{lstlisting}
+
+This is the same as the following (if x is not used anywhere else):
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+find otherPatternName(p1, x);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+\begin{minipage}{\textwidth}
+Negative application condition can be expressed by \texttt{neg find} keyword:
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1, p2: Type2 ){
+	neg find otherPattern(p1, p2);
+	Type1.reference(p1, p2);
+}
+\end{lstlisting}
+
+Also, we can use underscore if we don't want that the other pattern match occurs with \emph{any} value at the underscores. ( ie.\ \texttt{neg find} can be used to express negated existential quantification along with negated expressions )
+
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+	neg find otherPattern(p1, _);
+}
+\end{lstlisting}
+
+It is very important to clarify, that unlike in the case of find this is \emph{not} the same as the following:
+
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Type1 ){
+	neg find otherPattern(p1, x);
+}
+\end{lstlisting}
+As this will match if there exist \emph{any} x, that (p1, x) not satisfies the \texttt{otherPattern}.
+
+
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+\begin{minipage}{\textwidth}
+\texttt{count find} can be used to count maches to a given pattern (Counting the ways underscores can be bound to form a match for the other pattern)
+\begin{lstlisting}[language=vql]
+pattern personPattern(p){
+	Person(p)
+}
+
+pattern countPersons(cnt)
+	cnt == count find personPattern(_);
+}
+\end{lstlisting}
+	
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+\begin{minipage}{\textwidth}
+Equality and inequality also can be given between variables ( ==, != ):
+\begin{lstlisting}[language=vql]
+pattern friendsOfFriends(a, b){
+	Person.friend(a, x);
+	Person.friend(x, b);
+	a != b;
+}
+
+pattern sameOrFriend(a : Person, b: Person){
+	Person.friend(a, b);
+} or {
+	a == b;
+}
+\end{lstlisting}
+	
+Equality constraint is mostly used between parameters, as in other cases simply using one variable instead of using two and making them equal is simpler.  
+	
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+\begin{minipage}{\textwidth}
+The keyword \texttt{check} can be used to create a constraint, that a given java (XBase) expression is true. The expression only can refer to attribute  variables (Variables refering to data types instead of graph nodes).
+\begin{lstlisting}[language=vql]
+pattern adultPerson( p: Person ){
+	Person.age(p, age);
+	check(age >= 18);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+\begin{minipage}{\textwidth}
+The keyword \texttt{eval} can be used to evaluate a java (XBase) expression on attribute variables and assign the result to another variable.
+\begin{lstlisting}[language=vql]
+pattern patternName( p1: Person, p2: Person, agesum : EInt ){
+	Person.age(P1, a1);
+	Person.age(P2, a2);
+	agesum == eval(a1 + a2);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+\subsection{Annotations}
+
+\begin{minipage}{\textwidth}
+Annotations can be added to patterns with the following syntax:
+\begin{lstlisting}[language=vql]
+@AnnotationName(
+	a = {p1, p3}
+	a = {p2, p3}
+	b = "A simple string"
+)
+@AnnotationName2
+pattern patternName( p1, p2, p3, ... )
+	...
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+An annotation has a name (after @), and some named attributes using \texttt{name = value} syntax inside parentheses.
+One attribute name can used multiple times. 
+The attribute's value can be a single value or a list of values, that can be strings, numerals, or parameter reference.
+
+
+\subsubsection{Annotations used by our framework}
+
+The framework can process two types of annotations:
+\begin{itemize}
+	\item \texttt{@Bind} can be used to control what kind of graph pattern matching code will be generated, ie.\ what parameter sets can be bind to restrict the results. The version of the query, where all the parameters are unbound are generated by default.
+	
+	\item \texttt{@SkipDefaultGen} can be used to avoid default query generation for unbound version, eg.\ in case of helper patterns, we would not want to use it by itself most of the time.
+	
+\end{itemize}
+
+
+\section{VQL examples from the case study}
+
+\todo{befejezni}
+To show how the these elements can be used in patterns, now I present the benchmarked queries, and what their semantics are.
+
+\subsection{\texttt{trainLocations}}
+\begin{minipage}{\textwidth}
+
+\texttt{trainLocations} pattern matches for all the (\texttt{train},\texttt{loc}) tuples where \texttt{train} is a Train, that is on the location \texttt{loc}.
+Using this pattern we can query all the trains, and where they are.
+As @Bind annotation denotes, we can also bind the train parameter: this way we can query where a specific train is.
+\begin{lstlisting}[language = vql]
+@Bind(
+	parameters=train
+)
+pattern trainLocations(train: Train, loc: RailRoadElement)
+{
+	Train.on(train, loc);
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+
+\subsection{\texttt{derailment}}
+\begin{minipage}{\textwidth}
+	
+\begin{lstlisting}[language = vql]
+pattern derailment(elem: RailRoadElement, train: Train)
+{
+	Turnout(turnout);
+	RailRoadElement.train(elem,train);
+	
+	neg find connected(elem, turnout);
+	find straightOrDivergent(turnout, elem);
+}
+
+// Helper pattern, does not need to be generated, if not used
+@SkipDefaultGen
+private pattern straightOrDivergent(turnout : Turnout, elem : RailRoadElement){
+	Turnout.straight(turnout, elem);
+} or {
+	Turnout.divergent(turnout, elem);
+}
+
+// We need this query, because negation can be only be expressed with neg find
+@SkipDefaultGen
+private pattern connected(a : RailRoadElement, b : RailRoadElement){
+	RailRoadElement.connectedTo(a,b);
+}
+
+
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+\subsection{\texttt{closeTrains}}
+\begin{minipage}{\textwidth}
+Two trains are close, if they are on two segments that are connected by another segment
+\begin{lstlisting}[language = vql]
+pattern closeTrains(start : RailRoadElement, end : RailRoadElement)
+{
+	Train.on(t1,start);
+	
+	RailRoadElement.connectedTo(start,middle); // Has EOpposite, inverse navigation is effective even without model index
+	RailRoadElement.connectedTo(middle, end);
+	
+	Train.on(t2, end);
+	
+	start != end; // This ensures that the start and end segment is different
+	
+	t1 != t2; // A train may occupy two neighboring segments when moving; this is not a hazardous situation
+}
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+
+
+
+\subsection{\texttt{endOfSiding}}
+
+End of siding pattern matches, when there is a last segment of railroad, and a trail is near to that segment.
+The last segment is expressed as a segment, which has a neighbor, but only one.
+If a train is on the neighbor, the pattern matches.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language = vql]
+pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElement)
+{
+	RailRoadElement.train(neighbor, train);		
+	RailRoadElement.connectedTo(end,neighbor);
+	1 == count find connected(end,_);	
+}
+
+
+\end{lstlisting}
+\end{minipage}
+\vspace{\belowdisplayskip}
+
+

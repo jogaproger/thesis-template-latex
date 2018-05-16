@@ -21,7 +21,7 @@ As it has been stated before, the model of the system is stored distributedly on
 \section{Distributed query execution}
 
 
-\subsection{Distributed local search}
+\subsection{Distributed local search-based pattern matching}
 
 As models are stored on different computational units we still needs to find matches, that can span over multiple model parts. To find matches for a pattern local search algorithm is used in a distributed way. Search operations are being executed locally, and if the next operation needs to be executed on multiple nodes, the search context, (ie.\ the bound variables and the operations number) are sent to other computational units.
 
