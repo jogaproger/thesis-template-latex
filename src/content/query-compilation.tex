@@ -85,8 +85,6 @@ In this case, the most specific is choosen. If there are uncompatible types, the
 If all the types are EClass types, then we select the most general class, that are compatible (extends it or is the same) of all the classes and choose that.
 If we cannot choose such EClass, or there are multiple classes that satisfies this, then we throw an error (The later can happen eg., when there are two classes, A and B, and exists two class, that are a descendant of both of them).
 
-\todo{ Az ábra még pontosítható}
-
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.4\textwidth]{figures/multiple-inheritance-problem.pdf}
@@ -262,11 +260,26 @@ Two main methods can be used to run local search plan in case of generated code.
 One is to generate the plan as a data structure and create an interpreter that uses that plan to find matches. 
 The other is to generate the code directly from the plan. 
 The first method is good if we want to change the plan at runtime, but the interpreter itself introduces an overhead, causing performance to be slower.
-We used the later, because we don't change the plan at runtime.
+We implemented and measured the performance for both of them.
+
+\todo{Itt konkrétan a kódgenerálás részleteibe bele lehet menni, ha lesz idő}
+
 
 \subsection{Generating helper data structures}
 
-\todo{ interpretált és direkt kódgenerálás, frame-ek, frameset-ek, matchset-ek, stb }
+\subsubsection{Matching frame, frame vector}
+
+The variables of a body are stored in a data structure called the matching frame.
+We also generate a collection for frames called frame vector used in distributed behavior of the graph pattern matcher.
+We generate serializer and deserializer methods, which uses protobuf.
+The message structure (.proto file) is also generated alongside these structures.
+\todo{Konkrétan megcsinálni, hogy hogy generálódnak az osztályok, adattagok, névválasztás, XXXMAtchingFrame0, stb}
+
+\subsubsection{Match, MatchSet}
+
+These are used to store graph pattern matches. Match is a singular match (Practically it is the same as the Matching Frame projected to the parameters), while MatchSet is a collection for matches.
+
+
 
 
 

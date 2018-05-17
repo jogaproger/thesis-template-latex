@@ -199,8 +199,8 @@ The framework can process two types of annotations:
 
 
 \section{VQL examples from the case study}
+\label{sec:vql-examples}
 
-\todo{befejezni}
 To show how the these elements can be used in patterns, now I present the benchmarked queries, and what their semantics are.
 
 \subsection{\texttt{trainLocations}}
@@ -227,14 +227,19 @@ pattern trainLocations(train: Train, loc: RailRoadElement)
 \subsection{\texttt{derailment}}
 \begin{minipage}{\textwidth}
 	
+\texttt{derailment} matches, when a train is on the non-connecting side of a turnout:
+The turnout switches between the straight and the divergent railroad. 
+connectedTo reference points to two segment: The selected segment and the third, always connecting segment.
+So if a train is on a straight or the divergent segment (1, 2), but that segment does not connected to the turnout(3), then the pattern matches to this train and the segment it is on.
+
+
 \begin{lstlisting}[language = vql]
 pattern derailment(elem: RailRoadElement, train: Train)
 {
 	Turnout(turnout);
-	RailRoadElement.train(elem,train);
-	
-	neg find connected(elem, turnout);
-	find straightOrDivergent(turnout, elem);
+	RailRoadElement.train(elem,train); (1)
+	find straightOrDivergent(turnout, elem) (2);
+	neg find connected(elem, turnout); (3)
 }
 
 // Helper pattern, does not need to be generated, if not used

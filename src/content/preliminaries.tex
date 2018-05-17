@@ -50,20 +50,22 @@ A meta model is a model, that defines how the graph model of a system is built u
 	\end{center}
 \end{figure}
 
-\pagebreak
 
 \section{Domain and runtime modeling}
 
 In this framework, we use graph-based models to represent the current state of the system. 
 The state and the operating context of the system is captured in a model called the \emph{live model} or \emph{runtime model}.
-It is updated with sensor data and information from other sources, so the model represents the physical system's latest state. 
+It is updated with sensor data and information from other sources, so the model represents the physical system's latest state.
+An example for this is depicted on Figure~\ref{fig:live-models}. As train 105 is moving to a new segment of railway, sensors watching its position send updates to the model, which is getting modified to represent, that the train is now on a new segment.
+
+
 This model is used for runtime verification.
+While the model is being continuously updated it is also analyzed using graph pattern matching to find parts of the model that may imply.
 
 
-\todo{Értelmes ábrát ide}
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=0.6\textwidth]{figures/live-models.pdf}
+		\includegraphics[width=0.7\textwidth]{figures/live-models.pdf}
 		\caption{Live model updating}
 		\label{fig:live-models}
 	\end{center}
@@ -160,10 +162,10 @@ We go through the constraints and with each constraint, we do one of the followi
 \end{itemize}
 
 This structure leads to a search tree.
-It can be easily proved, that at the ith of the tree, the first x constraint is satisfied, as a child node not modifies already bound variables.
+It can be easily proved, that at the $i$th layer of the tree, the first $i$ constraint is satisfied, as a child node not modifies already bound variables.
 This means, that after the last constraint, the variable binding satisfies all the constraints, so it can be projected to the variables to find a solution.
 It can also be proved, that all of the variable bindings satisfying the constraints can be found: 
-Consider this variable bindings, and call this the goal binding, and start the algorithm: each extend operation can bind the unbound variables as in the goal binding, and each check operation 
+consider this variable bindings, and call this the goal binding. Now start the algorithm: each extend operation can bind the unbound variables as in the goal binding, and each check operation will find the constraint satisfied for the variable binding.
 
 We use depth first search, because it uses less memory, and it can be easily used to synthesize code, as the layers are well defined. This way search can be easily implemented using nested for loops.
 
@@ -183,14 +185,6 @@ One of the problems is distributed model handling, and the other is how to execu
 
 
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width=\textwidth]{figures/distributed-model-handling.pdf}
-		\caption{Handling distributed models and cross-references}
-		\label{fig:distributed-model-handling}
-	\end{center}
-\end{figure}
-
 
 
 \subsection{Distributed graph models}
@@ -202,6 +196,17 @@ On that computing element, that node is called a \emph{local node}.
 In the context of other computing modules it is called a \emph{remote node}. 
 Edges are stored in the computing module of their source node; 
 If their target node is not a local node on that node, a \emph{proxy node} is used to substitute the remote node.
+
+
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/distributed-model-handling.pdf}
+		\caption{Handling distributed models and cross-references}
+		\label{fig:distributed-model-handling}
+	\end{center}
+\end{figure}
+
 
 
 \subsection{Distributed query execution}

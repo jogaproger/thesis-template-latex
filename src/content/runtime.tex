@@ -1,36 +1,43 @@
 %
-\chapter{Distributed evaluation of monitoring goals}
+\chapter{Runtime architecture}
 %
 
+As the needed source files are generated, we now can use them to execute the given graph queries on a distributed system. In the previous chapters, we could see how the framework generates the source codes, in this framework I show, how those source codes are integrated with the existing \cpp{} library.
 
-\section{Distributed runtime model}
 
-As it has been stated before, the model of the system is stored distributedly on different computation units. A model element is only stored on a given computation unit. References can occur between elements in different partitions, so we create proxy objects, that represents an object from another partition, and the local object stores reference to proxy object. For example, on figure~\ref{fig:distrib-model-example} this can be seen. There are 4 segments, \texttt{S1},\texttt{S2}, \texttt{S3}, \texttt{S4} and two trains, \texttt{T5} and \texttt{T6}. If we allocate \texttt{S1}, \texttt{S2}, \texttt{T5} to one computation unit, and \texttt{S3}, \texttt{S4}, \texttt{T6} to another, we must deal with the edges between \texttt{S2} and \texttt{S3} We solve this by creating a proxy objects refering to their corresponding remote nodes and refer to them instead of the original, unavailable node.
 
-\begin{figure}[h]
+\section{Live model manipulation}
+Model code is generated to help the creation and maintenance of the live model.
+To create the model, first the \texttt{ModelRoot} class must be instanced.
+On different computation units, the models are synchronized by the software using DDS.
+Topics are created for two types of model update:
+\begin{itemize}
+	\item Object creation/deletion -- We need the information because if a graph pattern refers to remote objects, we create proxy elements for them.  
+	\item Reference creation/deletion (change) -- This is needed, because references can have opposites: For one reference change on another computing unit, we may need to alter (create/delete) its opposite reference on an object, that may be on this computation unit.
+\end{itemize}
+
+\begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=\textwidth]{figures/distributed-model.png}
-		\caption{Example for edges between nodes}
-		\label{fig:distrib-model-example}
+		\includegraphics[width=0.8\textwidth]{figures/model-dds.pdf}
+		\caption{ Synchronization of models via DDS }
+		\label{fig:model-dds}
 	\end{center}
 \end{figure}
 
+\section{Query execution}
 
+The execution of the queries are happening at different computation units, which are connected via network.
+On each computation unit, an instance of the software is running.
+The basic architecture of the monitoring components of a running instance can be seen on Figure~\ref{fig:query-runner-architecture}. 
+The component called \texttt{QueryService} handles the communication between instances of the software.
+\texttt{QueryRunner}s are responsible for running the local operations of a certain query execution. Executing a query requires \texttt{QueryRunner}s on each computation unit assigned to each other and communicating via \texttt{QueryService}. 
+Each \texttt{QueryRunner} processes the model while execute their search operations.
 
-
-\section{Distributed query execution}
-
-
-\subsection{Distributed local search-based pattern matching}
-
-As models are stored on different computational units we still needs to find matches, that can span over multiple model parts. To find matches for a pattern local search algorithm is used in a distributed way. Search operations are being executed locally, and if the next operation needs to be executed on multiple nodes, the search context, (ie.\ the bound variables and the operations number) are sent to other computational units.
-
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=1\textwidth]{figures/seq-diagram-query-exec.png}
-		\caption{Sequence diagram of an example query execution}
-		\label{fig:distibuted-exec}
-		
+		\includegraphics[width=0.8\textwidth]{figures/query-runner-architecture.pdf}
+		\caption{ Basic architecture of the query running system }
+		\label{fig:query-runner-architecture}
 	\end{center}
 \end{figure}
 
