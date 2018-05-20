@@ -28,7 +28,7 @@ Topics are created for two types of model update:
 
 The execution of the queries are happening at different computation units, which are connected via network.
 On each computation unit, an instance of the software is running.
-The basic architecture of the monitoring components of a running instance can be seen on Figure~\ref{fig:query-runner-architecture}. 
+The basic architecture of the monitoring components of a running instance can be seen on \autoref{fig:query-runner-architecture}. 
 The component called \texttt{QueryService} handles the communication between instances of the software.
 \texttt{QueryRunner}s are responsible for running the local operations of a certain query execution. Executing a query requires \texttt{QueryRunner}s on each computation unit assigned to each other and communicating via \texttt{QueryService}. 
 Each \texttt{QueryRunner} processes the model while execute their search operations.
@@ -40,6 +40,16 @@ Each \texttt{QueryRunner} processes the model while execute their search operati
 		\label{fig:query-runner-architecture}
 	\end{center}
 \end{figure}
+
+\subsection{Integration of generated code}
+
+As the query running components are generated, we need a way to integrate them.
+
+
+
+
+
+
 
 
 

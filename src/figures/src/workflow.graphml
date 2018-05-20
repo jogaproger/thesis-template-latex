@@ -15,10 +15,9 @@
   <graph edgedefault="directed" id="G">
     <data key="d0"/>
     <node id="n0">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="350.5238580934654" width="209.4471617357493" x="143.27800837377958" y="190.29484206607674"/>
+          <y:Geometry height="365.5238580934654" width="209.4471617357493" x="143.27800837377958" y="132.29484206607674"/>
           <y:Fill color="#E5E5E5" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="20" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="161.841796875" x="23.80268243037466" y="4.0">Design artifacts</y:NodeLabel>
@@ -27,10 +26,9 @@
       </data>
     </node>
     <node id="n1">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="350.5238580934654" width="203.11218764655354" x="352.7251701095289" y="190.2948420660768"/>
+          <y:Geometry height="365.5238580934654" width="203.11218764655354" x="352.7251701095289" y="132.2948420660768"/>
           <y:Fill color="#E5E5E5" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="20" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="50.5625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="133.384765625" x="34.8637110107768" y="4.0">Intermediate
@@ -40,10 +38,9 @@ resources</y:NodeLabel>
       </data>
     </node>
     <node id="n2">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="350.5238580934654" width="442.38660888547474" x="555.8373577560824" y="190.29484206607685"/>
+          <y:Geometry height="365.5238580934654" width="442.38660888547474" x="555.8373577560824" y="132.29484206607685"/>
           <y:Fill color="#E5E5E5" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="20" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="153.74609375" x="144.32025756773737" y="4.0">C++ codebase</y:NodeLabel>
@@ -52,7 +49,6 @@ resources</y:NodeLabel>
       </data>
     </node>
     <node id="n3">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="44.0" width="134.26753602275903" x="181.0359816527448" y="255.5"/>
@@ -70,7 +66,6 @@ resources</y:NodeLabel>
       </data>
     </node>
     <node id="n4">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="259.0"/>
@@ -88,10 +83,9 @@ resources</y:NodeLabel>
       </data>
     </node>
     <node id="n5">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="413.6786977033886"/>
+          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="381.0"/>
           <y:Fill color="#6DB6FF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="138.87109375" x="39.564453125" y="9.515625">Generated query code<y:LabelModel>
@@ -106,13 +100,12 @@ resources</y:NodeLabel>
       </data>
     </node>
     <node id="n6">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="263.8754321284554" width="124.40441743537849" x="836.9567819839633" y="259.0"/>
+          <y:Geometry height="209.0" width="124.40441743537849" x="836.9567819839633" y="259.0"/>
           <y:Fill color="#6DB6FF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="71.30078125" x="26.551818092689246" y="108.98459106422769">Framework
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="71.30078125" x="26.551818092689246" y="81.546875">Framework
 Library
 for C++<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -126,10 +119,9 @@ for C++<y:LabelModel>
       </data>
     </node>
     <node id="n7">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="485.8754321284554"/>
+          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="431.0"/>
           <y:Fill color="#6DB6FF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="213.361328125" x="2.3193359375" y="9.515625">Generated protobuf message code<y:LabelModel>
@@ -144,10 +136,9 @@ for C++<y:LabelModel>
       </data>
     </node>
     <node id="n8">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="37.0" width="134.26753602275903" x="391.61157094454035" y="485.8754321284554"/>
+          <y:Geometry height="37.0" width="134.26753602275903" x="391.61157094454035" y="431.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="119.001953125" x="7.632791448879516" y="9.515625">Protobuf messages<y:LabelModel>
@@ -162,10 +153,9 @@ for C++<y:LabelModel>
       </data>
     </node>
     <node id="n9">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="37.0" width="134.26753602275903" x="391.6115709445403" y="326.0"/>
+          <y:Geometry height="37.0" width="134.26753602275903" x="391.61157094454035" y="309.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="69.759765625" x="32.253885198879516" y="9.515625">DDS topics<y:LabelModel>
@@ -180,10 +170,9 @@ for C++<y:LabelModel>
       </data>
     </node>
     <node id="n10">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="326.0"/>
+          <y:Geometry height="37.0" width="218.0" x="588.9567819839633" y="309.0"/>
           <y:Fill color="#6DB6FF" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="163.73828125" x="27.130859375" y="9.515625">Generated DDS topic code<y:LabelModel>
@@ -198,10 +187,9 @@ for C++<y:LabelModel>
       </data>
     </node>
     <node id="n11">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="44.0" width="134.26753602275903" x="181.0359816527448" y="410.1786977033886"/>
+          <y:Geometry height="44.0" width="134.26753602275903" x="181.0359816527448" y="377.5"/>
           <y:Fill color="#FFFF99" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="107.01953125" x="13.624002386379516" y="13.015625">Query definitions<y:LabelModel>
@@ -215,8 +203,24 @@ for C++<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n12">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="37.0" width="375.5238416632594" x="588.9567819839633" y="196.87543212845537"/>
+          <y:Fill color="#6DB6FF" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="64.10546875" x="155.7091864566297" y="9.515625">User code<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="e0" source="n3" target="n4">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -227,11 +231,10 @@ for C++<y:LabelModel>
       </data>
     </edge>
     <edge id="e1" source="n3" target="n9">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="248.1697496641243" y="344.5"/>
+            <y:Point x="248.1697496641243" y="327.5"/>
           </y:Path>
           <y:LineStyle color="#0066CC" type="line" width="7.0"/>
           <y:Arrows source="none" target="delta"/>
@@ -240,7 +243,6 @@ for C++<y:LabelModel>
       </data>
     </edge>
     <edge id="e2" source="n9" target="n10">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -251,11 +253,10 @@ for C++<y:LabelModel>
       </data>
     </edge>
     <edge id="e3" source="n11" target="n8">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="248.1697496641243" y="504.3754321284554"/>
+            <y:Point x="248.1697496641243" y="449.5"/>
           </y:Path>
           <y:LineStyle color="#0066CC" type="line" width="7.0"/>
           <y:Arrows source="none" target="delta"/>
@@ -264,7 +265,6 @@ for C++<y:LabelModel>
       </data>
     </edge>
     <edge id="e4" source="n11" target="n5">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -275,7 +275,6 @@ for C++<y:LabelModel>
       </data>
     </edge>
     <edge id="e5" source="n8" target="n7">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

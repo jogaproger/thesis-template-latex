@@ -3,9 +3,9 @@
 \chapter{Preliminaries}
 %----------------------------------------------------------------------------
 
+In this chapter I revisit the background knowledge on graph-based modeling, and graph pattern matching. I also introduce the used terminology as it is crucial in the following chapters. At the end of the chapter I show how the concepts of graph pattern matching can be extended for distributed systems.
 
 \section{Graph-based modeling}
-\todo{Marci kommentek átvezetése}
 
 Structural and behavioral modeling of systems are often done using graphs. 
 Graphs are useful as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
@@ -21,7 +21,7 @@ Graphs can be extended to make them suitable for modeling:
 \end{itemize}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/graphs.pdf}
 		\caption{Basic graph (left), and extended (right) }
@@ -41,7 +41,7 @@ A meta model is a model, that defines how the graph model of a system is built u
 	\item hierarchical relationship between types
 \end{itemize}
 
-
+\autoref{fig:metamodel} show some of these concepts. The upper part is a meta model, and the lower is an instance model, that satisfies the rules defined by the metamodel: There can be 3 type of object: \texttt{ModelElement}, \texttt{Train} and \texttt{RailRoadElement}. All instance of \texttt{ModelElement} has an id. Both of \texttt{Train} and \texttt{RailRodeElement} are a subtype of \texttt{ModelElement} which means, that each instance of the subtype works as an instance of the supertype too.
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/metamodel.pdf}
@@ -56,7 +56,7 @@ A meta model is a model, that defines how the graph model of a system is built u
 In this framework, we use graph-based models to represent the current state of the system. 
 The state and the operating context of the system is captured in a model called the \emph{live model} or \emph{runtime model}.
 It is updated with sensor data and information from other sources, so the model represents the physical system's latest state.
-An example for this is depicted on Figure~\ref{fig:live-models}. As train 105 is moving to a new segment of railway, sensors watching its position send updates to the model, which is getting modified to represent, that the train is now on a new segment.
+An example for this is depicted on \autoref{fig:live-models}. As train 105 is moving to a new segment of railway, sensors watching its position send updates to the model, which is getting modified to represent, that the train is now on a new segment.
 
 
 This model is used for runtime verification.
@@ -81,7 +81,7 @@ The goal of graph pattern matching is to find all the subgraphs of a graph meeti
 
 A \emph{graph pattern} is given by a first-order logical expression, where variables refer to vertices of the graph\footnote{Edges of the graph can be represented by two variables, the source and the target vertex} or data values (string, numeric, enumeral).
 Free(not quantified) variables are called \emph{parameters}.  
-A \emph{pattern match} is a variable binding, where variables are assigned to graph nodes and data values in a way, that satisfies the expression.
+A \emph{pattern match} is a binding of parameters, where parameters are assigned to graph nodes and data values in a way, that satisfies the expression.
 A pattern's \emph{matchset} on a graph is the set of all the possible pattern match (ie. the truth set of the graph pattern if we view it as a predicate on the parameters).
 A \emph{graph query} is a program or execution plan capable of calculating the matchset of a graph pattern on a given graph. 
 Planning the most efficient graph query is crucial, because the performance of the verification depends on it.
@@ -95,11 +95,11 @@ These constraints are:
 	\item Reference -- Satisfied, when an edge with a given label exists from the first variables value to the second variables value (vertex only)
 	\item Attribute -- Satisfied, when a variable has a given attribute being the same as the other variables value (data only)
 	\item Constant Value -- Satisfied, when a variable is a given constant value (only for data variables)
-	\item Equality -- two variable's value is the same
+	\item Equality -- two variable's values are the same
 	\item Inequality -- two variable's values are different
 	\item Pattern match -- a tuple of variable values are a match of another pattern	
 	\item Negative pattern match -- a tuple of variable values are \emph{not} a match of another pattern
-	\item Pattern count -- Bind given parameters of an other pattern to the same value as given variables, and the number of matches must be bound to another variable.
+	\item Pattern count -- Counts the matches of a pattern.
 \end{itemize}
 
 
@@ -226,7 +226,7 @@ This introduces complexity, as we need to minimize network load, find matches, t
 
 In the framework, I extended local search-based graph pattern matching to work on distributed models.
 This is achieved by doing the basic search operations locally, but create additional operations, which works in a distributed manner. 
-Their mechanism is depicted on Figure~\ref{fig:distributed-ls}.
+Their mechanism is depicted on \autoref{fig:distributed-ls}.
 These operations transmits the query execution to other computing units.
 Those units continues to execute the query locally, and when their results are calculated, they send it back to the caller.
 The caller waits for the results, and merges the local and remote results.

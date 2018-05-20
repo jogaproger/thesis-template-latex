@@ -28,7 +28,7 @@ From an EPackage, we generate a folder; Every source file originated from an ele
 We generate sources from each class and enumeration of the package, also we generate other artifacts for the package, like helper classes, or model handling tools.
 
 
-\section{Mapping EClass to \protect\cpp{} classes}
+\section{Mapping EClass to \protect\cpptt{} classes}
 
 
 \begin{figure}
@@ -40,7 +40,7 @@ We generate sources from each class and enumeration of the package, also we gene
 \end{figure}
 
 
-The EClasses of the metamodel are mapped to various \cpp{} classes, as depicted on \mbox{Figure~\ref{fig:eclass-to-cpp}}.
+The EClasses of the metamodel are mapped to various \cpp{} classes, as depicted on \mbox{\autoref{fig:eclass-to-cpp}}.
 From each EClass we generate three \cpp{} classes:
 
 \begin{itemize}
@@ -55,7 +55,7 @@ The local class implements the interface. It stores the attributes and reference
 The remote class implements the interface, but are only used to substitute remote objects in references to them; 
 Accessing its variables are not possible, because they are stored in another node. 
 
-\section{Mapping an EEnums to \protect\cpp enumerations }
+\section{Mapping an EEnums to \protect\cpptt{} enumerations }
 
 Enumerations are simply mapped to \cpp{} enum classes as depicted on Fig.\ref{fig:eenum-to-cpp}.
 
@@ -89,7 +89,7 @@ namespace Package{
 \end{figure}
 
 
-The framework also generates an EnumHelper class and specializes it for generated enumerations. It can be used to  parse enumerations from string, or convert them to string, as these are not supported by \cpp{}. Eg.\ for the enumeration in Figure~\ref{fig:eenum-to-cpp} the framework generates the following template specialization:
+The framework also generates an EnumHelper class and specializes it for generated enumerations. It can be used to  parse enumerations from string, or convert them to string, as these are not supported by \cpp{}. Eg.\ for the enumeration in \autoref{fig:eenum-to-cpp} the framework generates the following template specialization:
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}[language=C++]
