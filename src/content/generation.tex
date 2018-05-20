@@ -28,7 +28,7 @@ From an EPackage, we generate a folder; Every source file originated from an ele
 We generate sources from each class and enumeration of the package, also we generate other artifacts for the package, like helper classes, or model handling tools.
 
 
-\section{Mapping EClass to \protect\cpptt{} classes}
+\section{Mapping EClasses to \protect\cpptt{} classes}
 
 
 \begin{figure}
@@ -55,7 +55,7 @@ The local class implements the interface. It stores the attributes and reference
 The remote class implements the interface, but are only used to substitute remote objects in references to them; 
 Accessing its variables are not possible, because they are stored in another node. 
 
-\section{Mapping an EEnums to \protect\cpptt{} enumerations }
+\section{Mapping EEnums to \protect\cpptt{} enumerations }
 
 Enumerations are simply mapped to \cpp{} enum classes as depicted on Fig.\ref{fig:eenum-to-cpp}.
 
