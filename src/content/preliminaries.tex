@@ -79,36 +79,55 @@ While the model is being continuously updated it is also analyzed using graph pa
 
 The goal of graph pattern matching is to find all the subgraphs of a graph meeting a certain criteria, defined by a \emph{graph pattern}.
 
-A \emph{graph pattern} is given by a first-order logical expression, where variables refer to vertices of the graph\footnote{Edges of the graph can be represented by two variables, the source and the target vertex} or data values (string, numeric, enumeral).
-Free(not quantified) variables are called \emph{parameters}.  
-A \emph{pattern match} is a binding of parameters, where parameters are assigned to graph nodes and data values in a way, that satisfies the expression.
-A pattern's \emph{matchset} on a graph is the set of all the possible pattern match (ie. the truth set of the graph pattern if we view it as a predicate on the parameters).
-A \emph{graph query} is a program or execution plan capable of calculating the matchset of a graph pattern on a given graph. 
-Planning the most efficient graph query is crucial, because the performance of the verification depends on it.
+Let's define the domain of an extended graph as the union of 
+\begin{itemize}
+	\item the set of the vertices of the graph
+	\item and the set of data values (Strings, numbers, boolean values, and enumeration literals), which from its attributes can take their values
+\end{itemize}
 
-Graph patterns are built up from basic constraints. 
-A constraint is a predicate on a tuple of variables. 
-These constraints are: 
+Then a \emph{graph pattern} is a predicate, which's domain is the domain of the extended graph.
+A \emph{pattern match} is a tuple, that satisfies the predicate.
+A pattern's \emph{matchset} is the truth set of the predicate, i.e.\ the set of tuples that satisfies the predicate.
+A \emph{graph query} is a program or execution plan capable of calculating the matchset of a graph pattern on a given graph. 
+
+
+
+We build up graph patterns with a modified\footnote{ Absence of universal quantification and functions of terms.  } first-order logical formula the following way:
+\begin{itemize}
+	\item Terms can be variables and constants, constants only refer to data values.
+	\item Constraints are a predicate applied to terms. 
+	\item A formula can be a constraint, or an expression composed of logical connectives (and, or) and existential quantifier ($\exists{}$) used with other formula.
+	\item The graph pattern itself is a formula.
+\end{itemize}
+
+We use the following constraints as basic elements of a graph patterns:
 
 \begin{itemize}
 	\item Type constraint -- Satisfied, when the variable's value is a vertex of a given type
+	\newline Type(Variable)
+	
 	\item Reference -- Satisfied, when an edge with a given label exists from the first variables value to the second variables value (vertex only)
+	\newline ReferenceName(Source variable, Target variable)
+	
+	
 	\item Attribute -- Satisfied, when a variable has a given attribute being the same as the other variables value (data only)
-	\item Constant Value -- Satisfied, when a variable is a given constant value (only for data variables)
+	\newline AttributeName(variable, attribute value)
+		
 	\item Equality -- two variable's values are the same
+	\newline var1 = var2
+		
 	\item Inequality -- two variable's values are different
+	\newline var1 $\neq$ var2
+	
 	\item Pattern match -- a tuple of variable values are a match of another pattern	
-	\item Negative pattern match -- a tuple of variable values are \emph{not} a match of another pattern
+	\newline PatternName(v1, v2, \dots{}).
+	
+	\item Negative pattern match -- a tuple of variable values are not a match of another pattern	
+	\newline PatternName(v1, v2, \dots{}).
+	
 	\item Pattern count -- Counts the matches of a pattern.
+	\newline $v_{out} = \text{count PatternName}(v1, v2, \dots{})$.
 \end{itemize}
-
-
-We built up the expression defining the graph pattern the following way. 
-An expression is a logical conjunction of subexpressions called pattern bodies ($Pattern = B_1 \vee B_2 \vee \dots$). 
-A \emph{pattern body} is an existentially quantified expression, quantified over a disjunction of constraints ($\exists{} v_1, v_2, \dots : C_1 \wedge{} C_2 \wedge \dots$).
-
-Viatra Query Language syntax conform with this structure as this restriction leads to more easily understandable graph queries.
-This restriction also helps our expressions to become evaluable using local search.
 
 We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textual languages (see VQL) is used in the framework.
 
@@ -131,9 +150,10 @@ Local search starts from a candidate solution for a problem, then searches by ap
 Local search can also be used to provide a matchset for a graph pattern in a graph.
 It is also a memory-efficient alternative for rete algorithm in \viatra{}~\cite{bur-marton-msc}.
 
-In our system we use local search-based graph pattern matching the following way:
-assume, that a graph pattern is given as stated before in section~\ref{section:gpmc}.
-Then it is a conjunction of expressions (bodies) that existentially quantifies the variables, then checks if the constraints are met.
+In our system we use local search-based graph pattern matching. 
+Let's assume, that a graph pattern is given as a conjunction of expressions (bodies) that existentially quantifies the variables, then checks if the constraints are met.
+We can do this, by outsourcing negated expressions to subpatterns and use negative pattern match constraint, and using other transformations.
+As VQL permits this structure only, the framework does not do these transformations.
 
 
 \begin{equation}
@@ -148,8 +168,13 @@ Pattern(p1, p2, \dots) = \;
 \end{array}
 \end{equation}
 
+We use the term body to denote a line of a pattern structured this way.
 We can find the truth set of this expression, by finding the truth sets of all the bodies as distinct predicates on the parameters, and taking their union.
 Our problem now is the following: find all the variable bindings, which satisfies the constraints of the body.
+
+The algorithm is the following:
+
+
 
 \todo{ez itt finomítható}
 

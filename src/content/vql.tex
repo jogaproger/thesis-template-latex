@@ -201,7 +201,17 @@ The framework can process two types of annotations:
 \section{VQL examples from the case study}
 \label{sec:vql-examples}
 
-To show how the these elements can be used in patterns, now I present the benchmarked queries, and what their semantics are.
+To show how the these elements can be used in patterns, now I present the benchmarked queries, and what their semantics are, for this I show, what subgraphes these patterns matches from the graph depicted on \autoref{fig:query-example-model}. This simple model represents 3 sequence of railroad elements and a Turnout (7) between them.
+\vspace{0.1\textwidth}
+
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/query-example-model.pdf}
+		\caption{Example model}
+		\label{fig:query-example-model}
+	\end{center}
+\end{figure}
 
 \subsection{\texttt{trainLocations}}
 \begin{minipage}{\textwidth}
@@ -210,14 +220,48 @@ To show how the these elements can be used in patterns, now I present the benchm
 Using this pattern we can query all the trains, and where they are.
 As @Bind annotation denotes, we can also bind the train parameter: this way we can query where a specific train is.
 \begin{lstlisting}[language = vql]
-@Bind(
-	parameters=train
-)
+@Bind( parameters=train )
 pattern trainLocations(train: Train, loc: RailRoadElement)
 {
 	Train.on(train, loc);
 }
 \end{lstlisting}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{figures/query-example-model-trainloc.pdf}
+	\end{center}
+\end{figure}
+
+\end{minipage}
+
+
+
+
+
+
+\subsection{\texttt{endOfSiding}}
+
+End of siding pattern matches, when there is a last segment of railroad, and a trail is near to that segment.
+The last segment is expressed as a segment, which has a neighbor, but only one.
+If a train is on the neighbor, the pattern matches.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[language = vql]
+pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElement)
+{
+	RailRoadElement.train(neighbor, train);		
+	RailRoadElement.connectedTo(end,neighbor);
+	1 == count find connected(end,_);	
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{figures/query-example-model-endofsiding.pdf}
+	\end{center}
+\end{figure}
+
 \end{minipage}
 \vspace{\belowdisplayskip}
 
@@ -256,10 +300,22 @@ private pattern connected(a : RailRoadElement, b : RailRoadElement){
 	RailRoadElement.connectedTo(a,b);
 }
 
-
 \end{lstlisting}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/query-example-model-derailment.pdf}
+	\end{center}
+\end{figure}
+
+
 \end{minipage}
 \vspace{\belowdisplayskip}
+
+
+
+
+
 
 
 \subsection{\texttt{closeTrains}}
@@ -280,30 +336,22 @@ pattern closeTrains(start : RailRoadElement, end : RailRoadElement)
 	t1 != t2; // A train may occupy two neighboring segments when moving; this is not a hazardous situation
 }
 \end{lstlisting}
+
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/query-example-model-closetrains.pdf}
+	\end{center}
+\end{figure}
+
+
 \end{minipage}
 \vspace{\belowdisplayskip}
 
 
 
 
-\subsection{\texttt{endOfSiding}}
-
-End of siding pattern matches, when there is a last segment of railroad, and a trail is near to that segment.
-The last segment is expressed as a segment, which has a neighbor, but only one.
-If a train is on the neighbor, the pattern matches.
-
-\begin{minipage}{\textwidth}
-\begin{lstlisting}[language = vql]
-pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElement)
-{
-	RailRoadElement.train(neighbor, train);		
-	RailRoadElement.connectedTo(end,neighbor);
-	1 == count find connected(end,_);	
-}
 
 
-\end{lstlisting}
-\end{minipage}
-\vspace{\belowdisplayskip}
 
 
