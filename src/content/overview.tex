@@ -44,11 +44,11 @@ If a pattern match occurs, we find the model elements that conform the pattern, 
 
 Users of the framework can design the domain models of the system using EMF Ecore modeling, while they can formulate monitoring goals as graph patterns using the declarative Viatra Query Language (VQL).
 Based on these definitions, the framework generates the monitoring \cpp{} program code.
-Besides the generated code, the framework provides and additional library to  along with additional libraries, that are used by the generated code. \todo{ez a mondat nincs befejezve}
+The generated code also uses an additional library provided by the framework.
 
 \subsection{Code generation workflow}
-A set of Eclipse plugins provide support to transform EMF Ecore models and VQL monitor definitions into \cpp code. \todo{nem biztos, hogy mindenhol megeri passzivot hasznalni}
-These plugins are written in Xtend. \todo{ha a C++-t mas betutipussal irod, akkor szerintem erdemes a technologiakra, de legalabb a programnyelvekre konzisztensen ugyan azt a betutipust hasznalni}
+A set of Eclipse plugins provides support to transform EMF Ecore models and VQL monitor definitions into \cpp{} code. 
+These plugins are written in Xtend.
 \autoref{fig:workflow} shows the corresponding code generation workflow.
 
 \begin{figure}[H]
