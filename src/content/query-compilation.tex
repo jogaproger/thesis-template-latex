@@ -10,7 +10,7 @@
 
 After the model handling code is generated, the user of the framework can build and maintain the live model at runtime. 
 Still to use find matches for graph patterns, we need additional components to be generated. 
-In this chapter, I show the workflow of query code genetion in the framework. 
+In this chapter, we show the workflow of query code genetion in the framework. 
 As stated before, graph queries are given in VQL (Viatra Query Language).
 
 
@@ -117,7 +117,7 @@ This planner takes a pattern and a cost function, then creates a permutation of 
 The cost function gives an approximated cost of applying a constraint based on the variables bound before the application and other information (Like statistics on the instance model, that can only be available at runtime, so \viatra{} can utilize them, but we can't as we generate the monitoring components at design time). 
 After this permutation is achieved, then search operations will be created by mapping the constraints to them considering their position.
 
-For the different types of constraint applications we use the following search operations. I also give the basic search operation a name to use them later in the examples.
+For the different types of constraint applications we use the following search operations. We also give the basic search operation a name to use them later in the examples.
 
 
 \subsubsection{Equality and pattern find}

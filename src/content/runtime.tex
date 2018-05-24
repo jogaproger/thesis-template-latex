@@ -3,7 +3,7 @@
 %
 
 As the needed source files are generated, we now can use them to execute the given graph queries on a distributed system. 
-In the previous chapters, we could see how the framework generates the source codes, in this framework I show, how those source codes work
+In the previous chapters, we could see how the framework generates the source codes, in this framework we show, how those source codes work
 
 
 
@@ -38,11 +38,14 @@ Each \texttt{QueryRunner} processes the model while execute their search operati
 
 Query execution works the following way:
 \begin{enumerate}
-\item User invokes a query from a \texttt{QueryService}.
-\item The \texttt{QueryService} requests the other instances of the software to create the appropiate query runners
+\item The user invokes a query at the local \texttt{QueryService}.
+\item The \texttt{QueryService} requests the other instances of the software to create the appropriate query runners
 \item Each \texttt{QueryService} creates a \texttt{QueryRunner} for the query
-\item
-\item
+\item Query evaluation starts at the first instance by evaluating search and distribution operations.
+\item Eventually other \texttt{QueryRunner}s will work on the query after distribution operations are reached.
+\item Subresults of the query evaluation is transmitted to the first node continuously, where they are merged to form the final result.
+\item The user can access the results.
+\item The set up query-runners can be deleted, or kept for later query execution for efficiency.
 \end{enumerate}
 
 
