@@ -3,7 +3,7 @@
 \chapter{Preliminaries}
 %----------------------------------------------------------------------------
 
-In this chapter I revisit the background knowledge on graph-based modeling, and graph pattern matching. I also introduce the used terminology as it is crucial in the following chapters. At the end of the chapter I show how the concepts of graph pattern matching can be extended for distributed systems.
+In this chapter We revisit the background knowledge on graph-based modeling, and graph pattern matching. We also introduce the used terminology as it is crucial in the following chapters. At the end of the chapter we show how the concepts of graph pattern matching can be extended for distributed systems.
 
 \section{Graph-based modeling}
 
@@ -249,14 +249,14 @@ This introduces complexity, as we need to minimize network load, find matches, t
 	\end{center}
 \end{figure}
 
-In the framework, I extended local search-based graph pattern matching to work on distributed models.
+In the framework, we extended local search-based graph pattern matching to work on distributed models.
 This is achieved by doing the basic search operations locally, but create additional operations, which works in a distributed manner. 
 Their mechanism is depicted on \autoref{fig:distributed-ls}.
 These operations transmits the query execution to other computing units.
 Those units continues to execute the query locally, and when their results are calculated, they send it back to the caller.
 The caller waits for the results, and merges the local and remote results.
 
-In this framework, I introduced two distributed operations:
+In this framework, we introduce two distributed operations:
 \begin{itemize}
 	\item Global distribution: globally distributes the query execution to all computing units (broadcast mechanics).
 	\item Aimed distribution, distributes the query execution to the node, which contains a given model element.
