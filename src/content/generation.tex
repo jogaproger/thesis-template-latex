@@ -2,10 +2,7 @@
 \chapter{Generating components for runtime model handling}
 %%
 
-To analyze the system, we need to create an inner representation of the system and its context. 
-As stated before, this is realized using graph based modelling. 
-The graph based live model is created and maintained, to reflect the current state of the system. 
-In this chapter, we show, how we generate the \cpp{} components capable of creating and maintaining the model representing the system. 
+faIn this chapter, we show, how we generate the \cpp{} components capable of creating and maintaining the model representing the system. 
 The input for the generation is the EMF Ecore metamodel of the system, so it must be available at this step of the system developement. 
 
 
@@ -25,7 +22,7 @@ The domain model consists of
 \end{itemize}
 
 From an EPackage, we generate a folder; Every source file originated from an elements from the package will be generated in that folder. 
-We generate sources from each class and enumeration of the package, also we generate other artifacts for the package, like helper classes, or model handling tools.
+We generate sources from each class and enumeration of the package, also we generate other artifacts for the package: helper classes and model handling utilities.
 
 
 \section{Mapping EClasses to \protect\cpptt{} classes}
@@ -57,7 +54,7 @@ Accessing its variables are not possible, because they are stored in another nod
 
 \section{Mapping EEnums to \protect\cpptt{} enumerations }
 
-Enumerations are simply mapped to \cpp{} enum classes as depicted on Fig.\ref{fig:eenum-to-cpp}.
+For each EEnum, a C++ enum class with the same name is generated. For each EEnumLiteral a C++ enumeration literal is added in the generated code as it is depicted in \autoref{fig:eenum-to-cpp}.
 
 \begin{figure}[H]
 	\begin{center}
@@ -89,7 +86,7 @@ namespace Package{
 \end{figure}
 
 
-The framework also generates an EnumHelper class and specializes it for generated enumerations. It can be used to  parse enumerations from string, or convert them to string, as these are not supported by \cpp{}. Eg.\ for the enumeration in \autoref{fig:eenum-to-cpp} the framework generates the following template specialization:
+The framework also generates an EnumHelper class and specializes it for generated enumerations. Such helper classes are necessery in order to  parse enumerations from string, or convert them to string, as these are not supported by \cpp{}. Eg.\ for the enumeration in \autoref{fig:eenum-to-cpp} the framework generates the following template specialization:
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}[language=C++]

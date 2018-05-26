@@ -1,7 +1,9 @@
 \chapter{Graph pattern definition in \viatra{} query language (VQL)}
 
-As stated before, graph patterns can be defined using \viatra{} Query Language (VQL). 
+Graph patterns can be defined using \viatra{} Query Language (VQL). 
 The language syntax is simple, altough complex queries are not always self evident how to be expressed.
+
+\section{ Language Constructs }
 
 \subsection{Pattern definition}
 Patterns and its bodies can be given by the \emph{pattern} keyword. 
@@ -182,7 +184,7 @@ pattern patternName( p1, p2, p3, ... )
 \end{minipage}
 \vspace{\belowdisplayskip}
 
-An annotation has a name (after @), and some named attributes using \texttt{name = value} syntax inside parentheses.
+An annotation has a name (after \texttt{@}), and some named attributes using \texttt{name = value} syntax inside parentheses.
 One attribute name can used multiple times. 
 The attribute's value can be a single value or a list of values, that can be strings, numerals, or parameter reference.
 
@@ -216,9 +218,9 @@ To show how the these elements can be used in patterns, now we present the bench
 \subsection{\texttt{trainLocations}}
 \begin{minipage}{\textwidth}
 
-\texttt{trainLocations} pattern matches for all the (\texttt{train},\texttt{loc}) tuples where \texttt{train} is a Train, that is on the location \texttt{loc}.
+\texttt{trainLocations} pattern matches for all the (\texttt{train},\texttt{loc}) pairs where \texttt{train} is a Train, that is on the location \texttt{loc}.
 Using this pattern we can query all the trains, and where they are.
-As @Bind annotation denotes, we can also bind the train parameter: this way we can query where a specific train is.
+As \texttt{@Bind} annotation denotes, we can also bind the train parameter: this way we can query where a specific train is.
 \begin{lstlisting}[language = vql]
 @Bind( parameters=train )
 pattern trainLocations(train: Train, loc: RailRoadElement)
@@ -226,11 +228,13 @@ pattern trainLocations(train: Train, loc: RailRoadElement)
 	Train.on(train, loc);
 }
 \end{lstlisting}
-
+We can see the matches of the pattern on \autoref{fig:match-trainLocations}. The matches are the train-location pairs of (1,5), (2,8), (3,11) and (4,13).
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=0.8\textwidth]{figures/query-example-model-trainloc.pdf}
 	\end{center}
+	\caption{Matches of the \texttt{trainLocations} pattern}
+	\label{fig:match-trainLocations}
 \end{figure}
 
 \end{minipage}
@@ -238,13 +242,12 @@ pattern trainLocations(train: Train, loc: RailRoadElement)
 
 
 
-
-
 \subsection{\texttt{endOfSiding}}
 
-End of siding pattern matches, when there is a last segment of railroad, and a trail is near to that segment.
+End of siding pattern matches, when there is a last segment of railroad, and a train is near to that segment.
 The last segment is expressed as a segment, which has a neighbor, but only one.
 If a train is on the neighbor, the pattern matches.
+We use the annotation \texttt{@SkipDefaulGen} on the \texttt{connected} pattern, because it is only needed as a subpattern.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}[language = vql]
@@ -254,17 +257,26 @@ pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElemen
 	RailRoadElement.connectedTo(end,neighbor);
 	1 == count find connected(end,_);	
 }
+
+@SkipDefaultGen
+private pattern connected(a : RailRoadElement, b : RailRoadElement){
+	RailRoadElement.connectedTo(a,b);
+}
 \end{lstlisting}
+
+\end{minipage}
+
+We can see the matches of the pattern on \autoref{fig:match-endOfSiding}. 
+The matches are the train-end-neighbor tuples of (2,9,8), (4,14,13). 
+We can see, that both of the \texttt{RailRoadElement} with id=9 and the \texttt{RailRoadElement} with id=14 has only one \texttt{connectedTo} reference, and their only neighbors have a trains on them.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=0.8\textwidth]{figures/query-example-model-endofsiding.pdf}
 	\end{center}
+	\caption{Matches of the \texttt{endOfSiding} pattern}
+	\label{fig:match-endOfSiding}
 \end{figure}
-
-\end{minipage}
-\vspace{\belowdisplayskip}
-
 
 
 
@@ -274,19 +286,18 @@ pattern endOfSiding(train: Train, end: RailRoadElement, neighbor: RailRoadElemen
 \texttt{derailment} matches, when a train is on the non-connecting side of a turnout:
 The turnout switches between the straight and the divergent railroad. 
 connectedTo reference points to two segment: The selected segment and the third, always connecting segment.
-So if a train is on a straight or the divergent segment (1, 2), but that segment does not connected to the turnout(3), then the pattern matches to this train and the segment it is on.
+So if a train is on a straight or the divergent segment (1, 2), but that segment does not connected to the turnout(3), then the pattern matches to this train-segment pair.
 
 
 \begin{lstlisting}[language = vql]
 pattern derailment(elem: RailRoadElement, train: Train)
 {
 	Turnout(turnout);
-	RailRoadElement.train(elem,train); (1)
-	find straightOrDivergent(turnout, elem) (2);
-	neg find connected(elem, turnout); (3)
+	RailRoadElement.train(elem,train); 		// (1)
+	find straightOrDivergent(turnout, elem) // (2)
+	neg find connected(elem, turnout); 		// (3)
 }
 
-// Helper pattern, does not need to be generated, if not used
 @SkipDefaultGen
 private pattern straightOrDivergent(turnout : Turnout, elem : RailRoadElement){
 	Turnout.straight(turnout, elem);
@@ -294,22 +305,27 @@ private pattern straightOrDivergent(turnout : Turnout, elem : RailRoadElement){
 	Turnout.divergent(turnout, elem);
 }
 
-// We need this query, because negation can be only be expressed with neg find
 @SkipDefaultGen
 private pattern connected(a : RailRoadElement, b : RailRoadElement){
 	RailRoadElement.connectedTo(a,b);
 }
 
 \end{lstlisting}
+\end{minipage}
+
+We can see the match of this pattern on \autoref{fig:match-derailment}. 
+the \texttt{Turnout} with id=7 has a straight side \texttt{RailRoadElement} with id=8 and a \texttt{Train} with id=2 on it. However, this segment is not connected to the turnout, which means, that the turnout is switched to its divergent side.
+This is the condition which causes the pattern to match on the \texttt{Train}-\texttt{RailRoadElement} pairs with ids (2,8).
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/query-example-model-derailment.pdf}
 	\end{center}
+	\caption{Matches of the \texttt{derailment} pattern}
+	\label{fig:match-derailment}
 \end{figure}
 
 
-\end{minipage}
 \vspace{\belowdisplayskip}
 
 
@@ -319,34 +335,65 @@ private pattern connected(a : RailRoadElement, b : RailRoadElement){
 
 
 \subsection{\texttt{closeTrains}}
+
+Two trains are close, if they are on two segments (start, end) that are connected by another segment (middle). The two train and the two segments are different\footnote{This is important, because it is not mandatory for variables to be different.}.
+The result of the pattern is the two segments.
+
+E.g\ on \autoref{fig:match-closeTrains} we can see, that the match of these query is the \texttt{RailRoadElement} pair of with ids (11, 13) and (13, 11). 
+
+Without the inequality constraints there could be matches, like (5, 5), bacause
+\begin{itemize}
+	\item start = end = (the \texttt{RailRoadElement} with id=5)
+	\item t1 = t2 = (the \texttt{train} with id=1)
+	\item middle = (the \texttt{RailRoadElement} with id=6)
+
+\end{itemize}
+would also satisfy the other constraints.
+
 \begin{minipage}{\textwidth}
-Two trains are close, if they are on two segments that are connected by another segment
 \begin{lstlisting}[language = vql]
 pattern closeTrains(start : RailRoadElement, end : RailRoadElement)
 {
 	Train.on(t1,start);
-	
-	RailRoadElement.connectedTo(start,middle); // Has EOpposite, inverse navigation is effective even without model index
-	RailRoadElement.connectedTo(middle, end);
-	
 	Train.on(t2, end);
 	
-	start != end; // This ensures that the start and end segment is different
-	
-	t1 != t2; // A train may occupy two neighboring segments when moving; this is not a hazardous situation
+	RailRoadElement.connectedTo(start,middle); 
+	RailRoadElement.connectedTo(middle, end);
+		
+	start != end; 
+	t1 != t2;	
 }
 \end{lstlisting}
+\end{minipage}
 
+\begin{minipage}{\textwidth}
+We can also improve on this query to filter "mirrored" matches:
+\begin{lstlisting}[language = vql]
+pattern closeTrains(start : RailRoadElement, end : RailRoadElement)
+{
+	Train.on(t1,start);
+	Train.on(t2, end);
+	
+	RailRoadElement.connectedTo(start,middle); 
+	RailRoadElement.connectedTo(middle, end);
+
+	Train.id(t1, id1);
+	Train.id(t2, id2);
+	check(id1 < id2);
+	
+}
+\end{lstlisting}
+In the evaluation of the framework, we used the former version of \texttt{closeTrains}
+\end{minipage}
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/query-example-model-closetrains.pdf}
 	\end{center}
+	\caption{Matches of the \texttt{closeTrains} pattern}
+	\label{fig:match-closeTrains}
 \end{figure}
 
-
-\end{minipage}
-\vspace{\belowdisplayskip}
 
 
 

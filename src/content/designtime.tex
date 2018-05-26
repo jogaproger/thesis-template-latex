@@ -1,5 +1,6 @@
 %%
 \chapter{Domain modeling in Eclipse Modeling Framework}
+\label{chapter:emf}
 %%
 
 In this chapter the creation of initial artifacts is presented: domain models and graph patterns.
@@ -27,8 +28,8 @@ while graph pattern definition and processing are provided by \viatra{}.
 	\end{center}
 \end{figure}
 
-Eclipse Modeling Framework (EMF) is an Eclipse based technology, which provides tools for model based developement: 
-Ecore \cite{ecore-package} for metamodeling (Ecore actually defines a meta meta-model for metamodeling), and various tools like java code generation from ecore models, etc.
+Eclipse Modeling Framework (EMF) is an Eclipse-based technology, which provides tools for model-based developement: 
+Ecore \cite{ecore-package} for metamodeling, and various tools like java code generation from ecore models, etc.
 
 Ecore metamodeling is highly similar to defining class diagrams in UML, however, 
 Ecore is more suitable for data and structural modeling: Interfaces are not a part of it, even though it can be substituted by abstract classes, as multiple inheritance is supported.
@@ -38,20 +39,21 @@ EObject is a base for everything, and its main purpuse to define the containment
 EObjects can contain each other in a strict tree structure, circular containments are not permitted.
 EModelElement expands EObject by giving the possibility to annotate them.
 
-An Ecore model contains packages (EPackage). 
-Packages have a namespace URI (nsURI), which can be used to refer it in other context eg.\ Viatra graph pattern definition.
-Packages can contain other subpackages, classes (EClass), enumerations (EEnum), and data types (EDataType).
+An Ecore model contains packages (\texttt{EPackage}). 
+Packages have a namespace URI (\texttt{nsURI}), which can be used to refer it in other context eg.\ Viatra graph pattern definition.
+Packages can contain other subpackages, classes (\texttt{EClass}), enumerations (\texttt{EEnum}), and data types (\texttt{EDataType}).
 
-Classes have structural features: references and attributes (EStructuralFeature, EReference, EAttribute); also they have operations (EOperation).
+Classes have structural features: references and attributes (\texttt{EStructuralFeature}, \texttt{EReference}, \texttt{EAttribute}); also they have operations (EOperation).
 References and attributes have multiplicity, defining their lower and upper bound is also possible.
 ECore also provides tools to define containment hierarchy in the domain model itself: References can be containment or containing reference (considering direction of the reference). 
-Two way navigation can be achieved by defining two reference and set them as the EOpposite of each other. A reference cannot be the EOpposite of itself, but its not a problem in most of the cases (eg.: \texttt{Human} class and \texttt{Spuse} reference). 
+Two way navigation can be achieved by defining two reference and set them as the EOpposite of each other. A reference cannot be the \texttt{EOpposite} of itself, but its not a problem in most of the cases (e.g.\ \texttt{Human} class and \texttt{Spuse} reference). 
 
 Multiple inheritance is supported for classes (eSuperTypes refers to direct base classes, and eAllSuperTypes for all transitively inherited base classes).
 
 Besides classes, packages can contain enumerations and data types. 
 Basic data types -- like EString, EInt, EBoolean etc.\ -- are defined by EMF, so its mostly never necessary to define others.
 Enumerations are consists of EEnumLiterals. 
-EEnumLiterals have an integral unique value, and its name is encapsulated in its EEnumerator instance.
+EEnumLiterals are identified by a unique integral value.
+The name of the literal is encapsulated in its EEnumerator instance.
 
 

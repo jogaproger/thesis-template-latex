@@ -9,15 +9,15 @@ In this chapter We revisit the background knowledge on graph-based modeling, and
 
 Structural and behavioral modeling of systems are often done using graphs. 
 Graphs are useful as they are easy to understand, intuitive to use, and lots of existing algorithms can be used to process them. 
-As the model-based approach used by the framework uses models of graph based formalism, in this section, graph-based modeling is presented.
+As the model-based approach used by the framework uses models of graph-based formalism, in this section, graph-based modeling is presented.
 
-A directed graph consists of a set of nodes and a set of edges, where edges are a tuple of two node: its \emph{source} node and its \emph{target} node. 
+A directed graph consists of a set of nodes and a set of edges, where edges are ordered pairs of two nodes. An edge has a \emph{source} node and a \emph{target} node. 
 Graphs can be extended to make them suitable for modeling:
 
 \begin{itemize}
-	\item by each node having a type
-	\item by each edge having a type implying its semantics and restricting what type of nodes can they connect
-	\item by nodes having attributes with given values (e.g.\ name)
+	\item by assigning a type to each node
+	\item by assigning a type to each edge that specifies the types of the source and the target node
+	\item by supplying nodes with attributes and attribute values (e.g.\ name)
 \end{itemize}
 
 
@@ -29,19 +29,18 @@ Graphs can be extended to make them suitable for modeling:
 	\end{center}
 \end{figure}
 
-In case of this extended graph model we also use the term \emph{object} for a typed node with attributes and \emph{reference} for a typed edge. This is consistent with the terminology used in software engineering.
+To be consistent with the terminology used in software engineering, in case of  extended graph model we also use the term \emph{object} for a typed node with attributes and \emph{reference} for a typed edge. 
 
-With this extended graph model, there is also a need to give rules for certain types of models, which is the role of \emph{meta modeling}.
 A meta model is a model, that defines how the graph model of a system is built up:
 \begin{itemize}
-	\item what type of objects are exists
-	\item what kind of attributes can a node of a certain type has (name and type)
+	\item what type of objects exist
+	\item what kind of attributes can a node of a certain type have
 	\item what type of references exist and what type of object can be its source and target node
 	\item multiplicity restriction for references and attributes
 	\item hierarchical relationship between types
 \end{itemize}
 
-\autoref{fig:metamodel} show some of these concepts. The upper part is a meta model, and the lower is an instance model, that satisfies the rules defined by the metamodel: There can be 3 type of object: \texttt{ModelElement}, \texttt{Train} and \texttt{RailRoadElement}. All instance of \texttt{ModelElement} has an id. Both of \texttt{Train} and \texttt{RailRodeElement} are a subtype of \texttt{ModelElement} which means, that each instance of the subtype works as an instance of the supertype too.
+\autoref{fig:metamodel} shows some of these concepts. The upper part is a meta model, and the lower is an instance model, that satisfies the rules defined by the metamodel: There can be 3 types of objects: \texttt{ModelElement}, \texttt{Train} and \texttt{RailRoadElement}. All instances of \texttt{ModelElement} has an \texttt{id}. Both of \texttt{Train} and \texttt{RailRodeElement} are a subtype of \texttt{ModelElement} which means, that each instance of the subtype works as an instance of the supertype as well.
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/metamodel.pdf}
@@ -54,9 +53,9 @@ A meta model is a model, that defines how the graph model of a system is built u
 \section{Domain and runtime modeling}
 
 In this framework, we use graph-based models to represent the current state of the system. 
-The state and the operating context of the system is captured in a model called the \emph{live model} or \emph{runtime model}.
-It is updated with sensor data and information from other sources, so the model represents the physical system's latest state.
-An example for this is depicted on \autoref{fig:live-models}. As train 105 is moving to a new segment of railway, sensors watching its position send updates to the model, which is getting modified to represent, that the train is now on a new segment.
+The state and the operating context of the system is captured in a model called the \emph{live model} or \emph{runtime model} \cite{Szvetits2013, DBLP:journals/computer/BlairBF09}.
+It is updated with sensor data and information from other sources, so the model captures the physical system's latest known state.
+An example for this is depicted in \autoref{fig:live-models}. As the train with \texttt{id}=105 is moving from the segment with \texttt{id}=1 to segment with \texttt{id}=2, the appropriate railway sensors send updates to the model, which is getting modified to represent, that the train is now on a new segment.
 
 
 This model is used for runtime verification.
@@ -79,39 +78,38 @@ While the model is being continuously updated it is also analyzed using graph pa
 
 The goal of graph pattern matching is to find all the subgraphs of a graph meeting a certain criteria, defined by a \emph{graph pattern}.
 
-Let's define the domain of an extended graph as the union of 
+We define the domain of an extended graph as the union of 
 \begin{itemize}
 	\item the set of the vertices of the graph
 	\item and the set of data values (Strings, numbers, boolean values, and enumeration literals), which from its attributes can take their values
 \end{itemize}
 
-Then a \emph{graph pattern} is a predicate, which's domain is the domain of the extended graph.
-A \emph{pattern match} is a tuple, that satisfies the predicate.
-A pattern's \emph{matchset} is the truth set of the predicate, i.e.\ the set of tuples that satisfies the predicate.
+Then a \emph{graph pattern} is a predicate, and its  domain is the domain of the extended graph.
+A \emph{pattern match} is a tuple of elements from the graph domain, that satisfies the predicate.
+A pattern's \emph{match set} is the truth set of the predicate, i.e.\ the set of tuples that satisfies the predicate.
 A \emph{graph query} is a program or execution plan capable of calculating the matchset of a graph pattern on a given graph. 
 
 
 
-We build up graph patterns with a modified\footnote{ Absence of universal quantification and functions of terms.  } first-order logical formula the following way:
+We build up graph patterns with a modified\footnote{ Universal quantification and functions of terms are not included } first-order logical formula the following way:
 \begin{itemize}
 	\item Terms can be variables and constants, constants only refer to data values.
-	\item Constraints are a predicate applied to terms. 
+	\item Constraints are a predicate evaluated over terms. 
 	\item A formula can be a constraint, or an expression composed of logical connectives (and, or) and existential quantifier ($\exists{}$) used with other formula.
 	\item The graph pattern itself is a formula.
 \end{itemize}
 
-We use the following constraints as basic elements of a graph patterns:
+We use the following constraints as basic elements of graph patterns:
 
 \begin{itemize}
-	\item Type constraint -- Satisfied, when the variable's value is a vertex of a given type
+	\item Type -- Satisfied, when the variable's value is a vertex of a given type
 	\newline Type(Variable)
 	
-	\item Reference -- Satisfied, when an edge with a given label exists from the first variables value to the second variables value (vertex only)
+	\item Reference -- Satisfied, when an edge with a given type exists from the first variable's value to the second variable's value (vertex only)
 	\newline ReferenceName(Source variable, Target variable)
 	
-	
-	\item Attribute -- Satisfied, when a variable has a given attribute being the same as the other variables value (data only)
-	\newline AttributeName(variable, attribute value)
+	\item Attribute -- Satisfied, when a variable value is a vertex, which's attribute is the same as another variable's value (data).
+	\newline AttributeName(variable of vertex, variable of attribute value)
 		
 	\item Equality -- two variable's values are the same
 	\newline var1 = var2
@@ -123,32 +121,71 @@ We use the following constraints as basic elements of a graph patterns:
 	\newline PatternName(v1, v2, \dots{}).
 	
 	\item Negative pattern match -- a tuple of variable values are not a match of another pattern	
-	\newline PatternName(v1, v2, \dots{}).
+	\newline neg PatternName(v1, v2, \dots{}).
 	
 	\item Pattern count -- Counts the matches of a pattern.
 	\newline $v_{out} = \text{count PatternName}(v1, v2, \dots{})$.
 \end{itemize}
 
-We can also use a visual representation (see Fig. \ref{fig:pattern-visual}) to illustrate a graph pattern, altough textual languages (see VQL) is used in the framework.
+We can also use a visual representation to illustrate a graph pattern, altough textual language (VQL) is used in the framework. 
+\autoref{fig:pattern-visual} shows how different graph pattern representations work. The pattern on the figure means, that two element is a \texttt{RailRoadElement} with only one \texttt{RailRoadElement} between them, and they have trains on them.
 
-\begin{figure}[h]
+
+
+\begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=\textwidth]{figures/closeTrains-pattern.pdf}
-		\caption{Visual representation of a graph pattern}
+		
+		\begin{minipage}[c]{\textwidth}
+			\begin{minipage}[r]{\textwidth}
+				\hfill
+				\includegraphics[width=\textwidth]{figures/closeTrains-pattern.pdf}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[c]{0.45\textwidth}
+\begin{lstlisting}[language=vql]
+pattern CloseTrains(St, End) {
+	Train.on(T,St);
+	Train.on(OT, End);
+	RailRoadElement.connectedTo(St,Mid);
+	RailRoadElement.connectedTo(Mid, end);
+	T != OT;
+	St != End;
+}
+\end{lstlisting}			
+			\end{minipage}
+			\hfill
+			\begin{minipage}[l]{0.45\textwidth}
+				
+\begin{equation*}
+\begin{array}{@{}l@{}}
+
+\text{CloseTrains}(St, End) = \\
+\exists{T} \  \exists{OT}\; \exists{Mid} ( \\
+\text{on}(T, St)  \  \wedge \\
+\text{on}(OT, End)  \  \wedge \\
+\text{connectedTo}(St, Mid)  \  \wedge \\
+\text{connectedTo}(Mid, End)  \  \wedge \\
+\text{T} \neq OT  \  \wedge \\
+\text{St} \neq End )
+\end{array}
+\end{equation*}
+			
+			\end{minipage}
+		\end{minipage}
+		\caption{CloseTrains pattern visualised (top), as defined in VQL (bottom left) and as a first-order logic expression (bottom right)}
 		\label{fig:pattern-visual}
 	\end{center}
 \end{figure}
 
 
-\section{Local search-based graph pattern matching}
-\todo{Ide is bevezetni marci kommentjeit}
 
+\section{Local search-based graph pattern matching}
 
 Local search refers to a family of algorithms solving problems involving a search space. 
 Local search starts from a candidate solution for a problem, then searches by applying local changes: moving to neighboring locations until solutions are found.
 
-Local search can also be used to provide a matchset for a graph pattern in a graph.
-It is also a memory-efficient alternative for rete algorithm in \viatra{}~\cite{bur-marton-msc}.
+Local search can also be used to find a matchset for a graph pattern in a graph.
+It is also a memory-efficient alternative for RETE algorithm in \viatra{}~\cite{bur-marton-msc}.
 
 In our system we use local search-based graph pattern matching. 
 Let's assume, that a graph pattern is given as a conjunction of expressions (bodies) that existentially quantifies the variables, then checks if the constraints are met.
