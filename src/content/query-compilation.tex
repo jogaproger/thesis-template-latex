@@ -15,7 +15,7 @@ In this chapter, we show the workflow of query code generation in the framework.
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=0.8\textwidth]{figures/query-compilation-workflow.pdf}
+		\includegraphics[width=\textwidth]{figures/query-compilation-workflow.pdf}
 		\caption{Query compilation workflow}
 		\label{figure:query-compile-workflow}
 	\end{center}
@@ -24,14 +24,25 @@ In this chapter, we show the workflow of query code generation in the framework.
 
 \section{Overview}
 
-The compilation of graph patterns is depicted in fig. \ref{figure:query-compile-workflow}. 
+The compilation of graph patterns is depicted in fig. \ref{figure:query-compile-workflow}:
+
+\begin{enumerate}[(1)]
+
+\item 
 First, VQL files containing the patterns are parsed using EMF so their contents are loaded into a Pattern Model.
-The Pattern Model are processed by \viatra{} and converted into PSystem representation of queries.
+\item 
+The Pattern Model is processed by \viatra{} and converted into PSystem representation of queries.
+\item 
 After that, we extend this representation with type information, as type information is more important in the \cpp{} generated code, than in the \viatra{} implementation.
+\item 
 Then, we create the plan for query execution; we use the local search planner of \viatra{} fine tuned with our search operation cost function to improve performance of distributed queries. 
 We also use some optimizations later to improve distributed performance. 
-After the fully optimized plan is ready, we can construct the generator model describing the source code structure and generate the \cpp{} files from them.
+\item 
+After the fully optimized plan is ready, we can construct the generator model describing the source code structure 
+\item
+and generate the \cpp{} files from them.
 
+\end{enumerate}
 
 
 
@@ -73,16 +84,26 @@ We extend PSystem with additional information, mainly with type information for 
 For this the types of the variables and parameters must be infered based on type constraints of the graph pattern.
 
 First the types of the variables must be infered. 
-First, we collect all the type constraints, that the variable must satisfy.
-We do this, by collecting all the variables that are the same as the variable( via equality constraint eg. ), 
-then collect the constraints refering to them.
-From this we can create a set of candidate types.
-Then we choose the type as the following. 
-If the types contains classes and datatypes, then we throw an error.
-If all the types are data types, then they must be compatible with each other (integral types, or the same type).
-In this case, the most specific is choosen. If there are uncompatible types, then we throw an error.
-If all the types are EClass types, then we select the most general class, that are compatible (extends it or is the same) of all the classes and choose that.
-If we cannot choose such EClass, or there are multiple classes that satisfies this, then we throw an error (The later can happen eg., when there are two classes, A and B, and exists two class, that are a descendant of both of them).
+\begin{enumerate}
+	\item 
+	First, we collect all the type constraints, that the variable must satisfy.
+	We do this, by collecting all the variables that are the same as the variable( via equality constraints ), 
+	then collect the constraints refering to them.
+	From this we can create the set of candidate types.
+	\item
+	Then we choose the type:
+	\begin{itemize}
+		\item
+		If all the types are compatible data types (integral types, or the same type), then we choose the most specific type
+		\item
+		If all the types are EClass types, then we select the most general class, that is compatible (extends it or is the same) of all the classes and choose that.
+		If we cannot choose such EClass, or there are multiple classes that satisfies this, then the type inference is failed.
+		A case for this is depicted on \autoref{fig:multiple-inheritance-problem}: if a variable's type is restricted as \texttt{A} and \texttt{B}, we cannot choose between \texttt{X} and \texttt{Y}
+		\item
+		In other cases (e.g. both of data types and class types is used) the type inference is failed
+	\end{itemize}
+\end{enumerate}
+
 
 \begin{figure}[h]
 	\begin{center}
@@ -92,9 +113,10 @@ If we cannot choose such EClass, or there are multiple classes that satisfies th
 	\end{center}
 \end{figure}
 
-If the types of the variables are known then the types of the parameters can be infered. 
-For this, we collect the variables that represents this parameter from each body.
+If the types of the variables are known then the types of the parameters can be inferred. 
+For this, we collect the variables that represent this parameter from each body.
 As the parameters value can be any of the variable, we choose the type, that generalizes them.
+If no such type exists, the inference of the parameter type is failed.
 
 We also maintain additional information in our representation. 
 Bodies also maintain the relationship between variables and parameters. 
@@ -103,24 +125,24 @@ In PSystem, this information is not directly available, parameters and variables
 \section{Search plan calculation}
 
 \subsection{Creating a basic plan}
-After we have extended PSystem with the needed information, we can plan how the pattern will be evaluated at runtime, ie.\ how the queries code will process the graph and produce matches for the pattern.
+After we have extended PSystem with the needed information, we can plan how the pattern will be evaluated at runtime, i.e.\ how the query code will process the graph and produce matches for the pattern.
 
 The first step is flattening and normalization. 
-The purpose of flattening is to replace pattern calls with their code, as this leads more efficient code, than handling the pattern as a black box.
-%At normalization, equality constraints of variable are handledfas: equal variables are unified, and equality constraint is omitted.
+The purpose of flattening is to replace pattern calls with the constraints of the bodies of the referenced pattern, as in most of the cases this leads more efficient code, than handling the pattern as a black box.
+At normalization, equality constraints are optimized: equal variables are unified, and equality constraint is omitted.
 
-After flattening and normalization, we needs to create the search plan for each body of the pattern. From a set of constraints that declaratively defines the body we need to create an imperative sequence of search operations.
+After flattening and normalization, we need to create the search plan for each body of the pattern. From a set of constraints that declaratively defines the body we need to create an imperative sequence of search operations.
 
 For this, we use the local search planner of \viatra{}.
 This planner takes a pattern and a cost function, then creates a permutation of constraints that minimizes the cost function. 
-The cost function gives an approximated cost of applying a constraint based on the variables bound before the application and other information (Like statistics on the instance model, that can only be available at runtime, so \viatra{} can utilize them, but we can't as we generate the monitoring components at design time). 
+The cost function gives an approximated cost of applying a constraint based on the variables bound before the application and other information\footnote{One of the used detail is the statistics on the instance model: As it can only be available at runtime, we can't use these at design time}. 
 After this permutation is achieved, then search operations will be created by mapping the constraints to them considering their position.
 
 For the different types of constraint applications we use the following search operations. We also give the basic search operation a name to use them later in the examples.
 
 
 \subsubsection{Equality and pattern find}
-These two types of constraints are never appear in this phase, as they are both omitted. Pattern find constraints are replaced with their inner constraints in the flattening phase, while Equality constraints are omitted in normalization phase.
+These two types of constraints are never appear in this phase, as they are both optimized. Pattern find constraints are replaced with their inner constraints in the flattening phase, while Equality constraints are optimized in normalization phase.
 
 
 \subsubsection{Type constraint}
@@ -193,7 +215,7 @@ The following search operations can cause problems in a distributed setup:
 	\item ExtendInstanceOf
 \end{itemize}
 
-CheckNavigation and ExtendNavigation need the source object to be available at the computation unit, because references and attributes are stored on local objects.
+CheckNavigation and ExtendNavigation need the source object to be available at the computing unit, because references and attributes are stored on local objects.
 ExtendInstanceOf needs to expa
 
 \subsubsection{Example for search plan creation on a pattern }
@@ -258,7 +280,7 @@ The structure of the generated code is depicted on \autoref{fig:generated-code-s
 For each pattern we generate a \texttt{Matcher} class.
 This class contains the methods for query execution.
 We also generate a \texttt{Match} class which is a data class for pattern match.
-A \texttt{MatchSet} class is also generated which holds a subresult of a query, it is a collection of matches.
+A \texttt{MatchSet} class is also generated which holds a subresult of a query, which is a collection of matches.
 We generate \texttt{Frame} classes, which can holds variable bindings. 
 Since different parameter-bound patterns and different bodies of a pattern can contain a different set of variables, we generate multiple frame class for a pattern.
 
