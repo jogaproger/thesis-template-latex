@@ -366,6 +366,8 @@ This way, the distributed local search plan will have the same effect, but can b
 
 \newcommand{\mrt}{models\-@ run\-time\space}
 
+In this section, the related work is summarized. The basis of this work has been published in \cite{FASE}, this related work is also based on that paper. Three main areas are related to the introduced approach: runtime verification, runtime verification of distributed systems and distributed graph query processing. All the related approaches are summarized in the following.
+
 %TODO mindenhol legyen meg, hogy latszodjon, mi az uj
 %\paragraph{Runtime verification approaches.}
 \subsubsection{Runtime verification approaches}
@@ -374,9 +376,6 @@ which is a very complex challenge. Thus consistent system behavior is frequently
 
 \subsubsection{Runtime verification of distributed systems}
 While there are several existing techniques for runtime verification of sequential programs available, the authors of \cite{Mostafa2015} claim that much less research was done in this area for distributed systems. Furthermore, they provide the first sound and complete algorithm for runtime monitoring of distributed systems based on the 3-valued semantics of LTL.
-
-The recently introduced Brace framework~\cite{Zheng2016} supports RV in distributed resource-constrained environments by incorporating dedicated units in the system to support global evaluation of monitoring goals. There is also focus on evaluating LTL formulae in a fully distributed manner in \cite{Bauer2016} for components communicating on a synchronous bus in a real-time system.
-Additionally, machine learning-based solution for scalable fault detection and diagnosis system is presented in \cite{Alippi2017} that builds on correlation between observable system properties.
 
 \subsubsection{Distributed graph queries}
 %TODO ezzel kapcsolatos eredmenyeket keresni

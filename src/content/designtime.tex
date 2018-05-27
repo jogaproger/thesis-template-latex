@@ -57,3 +57,18 @@ EEnumLiterals are identified by a unique integral value.
 The name of the literal is encapsulated in its EEnumerator instance.
 
 
+\section{Metamodel from the case study}
+
+The metamodel of our case study is depicted in \autoref{fig:unified-mm}.
+containment edges are marked by a black diamond at the container object.
+The \texttt{MoDeS3ModelRoot} is the root of the containment hierarchy, only one. Computing units are represented by the \texttt{ComputingModule} class. \texttt{DomainElement} is the base class for all the classes representing an element of the railway systems. \texttt{Train} represents the trains, The railways are consisted of the instances of \texttt{RailRoadElement}. A \texttt{RailRoadElement} divides between a \texttt{Turnout} with \texttt{straight} and \texttt{divergent} track. \texttt{Segments} are simple railway segments with one or two neighbors. A \texttt{connectedTo} reference exists between two rail road elements, if the train can travel from one to the other.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/unified-mm.pdf}
+	\end{center}
+	\caption{Metamodel from the case study}
+	\label{fig:unified-mm}
+\end{figure}
+
+
