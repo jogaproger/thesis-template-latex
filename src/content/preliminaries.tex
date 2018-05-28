@@ -3,7 +3,7 @@
 \chapter{Preliminaries}
 %----------------------------------------------------------------------------
 
-In this chapter, we revisit the background knowledge on graph-based modeling, and graph pattern matching. We also introduce the used terminology as it is crucial in the following chapters. At the end of the chapter, we show how the concepts of graph pattern matching can be extended to run over distributed systems.
+In this chapter, we revisit the background knowledge on graph-based modeling, and graph pattern matching. We also introduce the used terminology as it is crucial in the following chapters. We show how the concepts of graph pattern matching can be extended to run over distributed systems. We also present related works about these topics.
 
 \section{Graph-based modeling}
 
@@ -57,10 +57,7 @@ It is updated with sensor data and information from other sources, so the model 
 This model is used for runtime verification.
 While the model is being continuously updated it is also analyzed using graph pattern matching to find parts of the model that may imply error in the system.
 
-An example of a live model is depicted in \autoref{fig:live-models}. As the train with \texttt{id}=105 is moving from the segment with \texttt{id}=1 to segment with \texttt{id}=2, the appropriate railway sensors send updates to the model, which is modified to represent, that the train is on an other segment.
-
-
-
+An example of a live model is depicted in \autoref{fig:live-models}. As the train with \texttt{id}=105 is moving from the segment with \texttt{id}=1 to segment with \texttt{id}=2, the appropriate railway sensors send updates to the model, which is modified by a computing unit to represent that the train is on an other segment.
 
 \begin{figure}[H]
 	\begin{center}
@@ -70,6 +67,7 @@ An example of a live model is depicted in \autoref{fig:live-models}. As the trai
 	\end{center}
 \end{figure}
 
+\newpage
 \section{Foundations of graph pattern matching}
 \label{section:gpmc}
 
@@ -81,14 +79,13 @@ The goal of graph pattern matching is to find all subgraphs of a graph meeting a
 We define the domain of an extended graph as the union of 
 \begin{itemize}
 	\item the set of the vertices of the graph
-	\item and the set of data values (Strings, numbers, boolean values, and enumeration literals), that can be assigned to the attributes of its vertices
+	\item and the set of data values (Strings, numbers, boolean values, and enumeration literals), that can be assigned to the attributes occuring in the graph
 \end{itemize}
 
-A \emph{graph pattern} is a predicate, and its  domain is the domain of the extended graph.
+A \emph{graph pattern} is a predicate, and its domain is the domain of the extended graph.
 A \emph{pattern match} is a tuple of elements from the graph domain, that satisfies the predicate.
 A pattern's \emph{match set} is the truth set of the predicate, i.e.\ the set of tuples that satisfies the predicate.
 A \emph{graph query} is a program or execution plan capable of calculating the match set of a graph pattern on a given graph. 
-
 
 
 We build up graph patterns with a modified\footnote{ Universal quantification and functions of terms are not included } first-order logical formula the following way:
@@ -117,13 +114,13 @@ We use the following constraints as basic elements of graph patterns:
 	\item Inequality -- two variable's values are different
 	\newline $\mathit{var1} \neq \mathit{var2}$
 	
-	\item Pattern match -- a tuple of variable values are a match of another pattern	
+	\item Pattern match -- a tuple of variable values is a match of another pattern	
 	\newline $\text{PatternName}(\mathit{v1}, \mathit{v2}, \dots{})$.
 	
-	\item Negative pattern match -- a tuple of variable values are not a match of another pattern	
+	\item Negative pattern match -- a tuple of variable values is not a match of another pattern	
 	\newline $\text{neg PatternName}(\mathit{v1}, \mathit{v2}, \dots{})$.
 	
-	\item Pattern count -- Counts the matches of a pattern.
+	\item Pattern count -- Counts the matches of a pattern. The constraint is satisfied, when the count of matches is the same as a given variable's value
 	\newline $v_{out} = \text{count PatternName}(\mathit{v1}, \mathit{v2}, \dots{})$.
 \end{itemize}
 
@@ -157,16 +154,15 @@ pattern CloseTrains(St, End) {
 			\begin{minipage}[l]{0.45\textwidth}
 				
 \begin{equation*}
-\begin{array}{@{}l@{}}
+\begin{array}{@{}r@{}l@{}}
 
-\text{CloseTrains}(St, End) = \\
-\exists{T} \  \exists{OT}\; \exists{Mid} ( \\
-\text{on}(T, St)  \  \wedge \\
-\text{on}(OT, End)  \  \wedge \\
-\text{connectedTo}(St, Mid)  \  \wedge \\
-\text{connectedTo}(Mid, End)  \  \wedge \\
-\text{T} \neq OT  \  \wedge \\
-\text{St} \neq End )
+\text{CloseTrains}(St, End) = & \exists{T} \  \exists{OT}\; \exists{Mid} ( \\
+& \text{on}(T, St)  \  \wedge \\
+& \text{on}(OT, End)  \  \wedge \\
+& \text{connectedTo}(St, Mid)  \  \wedge \\
+& \text{connectedTo}(Mid, End)  \  \wedge \\
+& \text{T} \neq OT  \  \wedge \\
+& \text{St} \neq End )
 \end{array}
 \end{equation*}
 			
@@ -184,8 +180,7 @@ pattern CloseTrains(St, End) {
 Local search refers to a family of algorithms solving problems involving a search space. 
 Local search starts from a candidate solution for a problem, then searches by applying local changes: moving to better neighboring solutions until eligible solutions are found.
 
-Local search can also be used to find a match set for a graph pattern in a graph.
-It is also a memory-efficient alternative for RETE algorithm in \viatra{}~\cite{bur-marton-msc}.
+Local search-based algorithms can also be used to find a match set for a graph pattern in a graph.
 In our system, we use local search-based graph pattern matching. 
 
 We define \emph{pattern body} as a subexpression of the graph pattern which has the following structure:
@@ -196,7 +191,7 @@ We define \emph{pattern body} as a subexpression of the graph pattern which has 
  \text{Constr}_{12}(\bar{p},\bar{x} ) \, \wedge \, \dots{})
 \end{array}
 \end{equation*}
-where $\bar{p}$ is the list of parameters, $\bar{v}$ is the list of variables that occur in the constraints.
+where $\bar{p}$ is the list of parameters, $\bar{v}$ is the list of non-parameter variables that occur in the constraints.
 
 In the following, we only use graph patterns composed by pattern bodies using the \emph{or} logical connective
 
@@ -212,7 +207,7 @@ Pattern(p1, p2, \dots) = \;
 \end{array}
 \end{equation*}
 
-As VQL permits only this structure, the user must give the patterns in this form. This can be achieved by different transformations of the pattern, such as extracting negated expressions to subpatterns  and use negative pattern match constraint instead.
+As VQL permits only this structure, the user must give the patterns in this form. This can be achieved by different transformations of the pattern, such as extracting negated expressions to subpatterns and use negative pattern match constraint instead.
 
 We can find the match set of this expression, by finding the match sets of all the pattern bodies as distinct predicates on the parameters, and taking their union.
 The problem now is the following: find all variable bindings, which satisfies the constraints of the body.
@@ -249,7 +244,7 @@ Starting from the first constraint:
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.7\textwidth]{figures/localsearch.pdf}
-		\caption{Handling distributed models and cross-references}
+		\caption{Local search evaluation}
 		\label{fig:localsearch}
 	\end{center}
 \end{figure}
@@ -261,18 +256,18 @@ Because already bound variables are not modified, we can conclude the following:
 	\item 
 	The search space is a tree, because all of the children of a frame will bind a variable differently, and these values are not changed in the subtree.
 	\item
-	At the $i$th layer of the tree, the first $i$ constraint is satisfied by the frame, as a child node does not modify already bound variables.
+	At the $i$th layer of the tree, the first $i$ constraint is satisfied by the frame, as a child node does not modify already bound variables, which satisfied the previous constraints.
 		
 \end{itemize}
 
 This means, that after computing the last constraint, the variable binding satisfies all the constraints, so it can be projected to the variables to form a solution.
 
-We use depth-first search, because it uses less memory. Also generating depth-first search code is easy and efficient, as the layers are well defined. This way search can be easily implemented using nested for loops.
+We use depth-first search, because it uses less memory. Also generating depth-first search code is easy and efficient, as the layers are well defined, thus it can be easily implemented using nested for loops.
 
 \subsection{Local search plan}
-With a given order of the constraints, at the evaluation of the $i$th constraint we know what variables are already bound. Thus we know what kind of operation we will have to execute to generate the next frame which will satisfy the constraint.
+With a given order of the constraints, at the evaluation of the $i$th constraint we know what variables are already bound. Thus we know what kind of operation we will have to execute to generate the next frame(s) which will satisfy the constraint.
 
-A \emph{search operation} is an operation, that constructs the frames from the current frame, so they satisfy a given constraint.
+A \emph{search operation} is an operation, that constructs the frames from the current frame, so they satisfy a given constraint, while already bound variables are not changed.
 \begin{itemize}
 	\item 
 	A \emph{check operation} is a search operation, which checks, whether the frame satisfies the given constraint. If it is, then the next frame is the same as the current frame, otherwise there are no next frames. (see the algorithm at 3.(a))
@@ -281,15 +276,12 @@ A \emph{search operation} is an operation, that constructs the frames from the c
 
 \end{itemize}
 
-
 \emph{Local search plan} is a sequence of search operations.
+\emph{Local search planning} is the process of creating the local search plan by ordering the constraints and converting them to search operations considering what variables are bound before its execution.
 
 \section{Distributed computational platform}
 
-% adatok diszjunkt halmazokra bontva különböző csomópontra
-% az algoritmusok is elosztottak, nem lesz összegyűjtve az infó, úgy van kiértékelve, hogy nincs aki mindent látna a rendszerből
-
-In this thesis, the phrase \emph{computing unit} is used to denote a physical or virtual execution component of the CPS that is capable of storing a part of the graph model and updates it to represent the current state of the physical world, eg.\ an embedded system or a virtual machine.
+In this thesis, the phrase \emph{computing unit} is used to denote a physical or virtual execution component of the CPS that is capable of storing a part of the graph model and updates it to represent the current state of the physical world.
 
 In distributed CPSs various sensors serve as data sources and these sensors are connected to different computing units of the platform. However, in order to be able to monitor the distributed system as a whole, computing units need to exchange data.
 Sending the sensor data to one computing unit and evaluate on that can cause different problems: 
@@ -324,7 +316,7 @@ A global model does not exist but computing units store partial models. Edges co
 
 \subsection{Distributed query execution}
 
-Distributed query execution is used in the framework to provide graph pattern matches
+Distributed query execution is used in the framework to provide graph pattern matches.
 The purpose of distributed query execution is to run queries on distributed models on multiple computers. 
 This introduces complexity, as we need to minimize network load, find matches that can span over multiple model parts, and provide low response times despite the distributed structure of the model.
 
@@ -341,7 +333,7 @@ In the framework, we extended local search-based graph pattern matching to work 
 This is achieved by doing the basic search operations locally, but create additional operations, which works in a distributed manner. 
 Their mechanism is depicted on \autoref{fig:distributed-ls}.
 These operations transmit the query execution to other computing units.
-The other units continue to execute the query locally. When their results are calculated, they send it back to the caller.
+The other units continue to execute the query locally. When the results from this execution branch are calculated, they are sent back to the caller.
 The caller waits for the results and merges the local and remote results.
 
 In this framework, we introduce two distributed operations:
@@ -350,7 +342,7 @@ In this framework, we introduce two distributed operations:
 	\item Targeted distribution, distributes the query execution to the node, which contains a given model element.
 \end{itemize}
 
-The first can be used to globally iterate throw all elements of a given type. 
+The first can be used to globally iterate through all elements of a given type. 
 The latter is to help navigation through references, as references are stored locally.
 
 A distributed local search plan can be calculated from a non-distributed one by the following:

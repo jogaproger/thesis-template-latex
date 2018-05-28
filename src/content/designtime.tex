@@ -3,11 +3,9 @@
 \label{chapter:emf}
 %%
 
-In this chapter the creation of initial artifacts is presented: domain models and graph patterns.
+In this chapter the creation of domain models is described.
 Domain modeling is an essential part of our framework, as the domain model defines the structure of the runtime live model, and affects the whole process. 
-After the domain model is known, graph pattern can be specified, which will be used later in runtime analysis.
-In the framework domain modeling are technologically backed up by EMF (Eclipse Modeling Framework), 
-while graph pattern definition and processing are provided by \viatra{}.
+In the framework, domain modeling is accomplished by EMF (Eclipse Modeling Framework) Ecore modeling.
 
 \section{Eclipse Modeling Framework}
 
@@ -36,12 +34,12 @@ Ecore is more suitable for data and structural modeling: Interfaces are not a pa
 
 The hierarchy of Ecore elements can be seen in \autoref{fig:ecore-hierarchy}, while its structure in \autoref{fig:ecore-relations}
 EObject is a base for everything, and its main purpose to define the containment hierarchy of the model. 
-EObjects can contain each other in a strict tree structure, circular containments are not permitted.
-EModelElement expands EObject by giving the possibility to annotate them.
+An EObject can contain other EObjects in a tree structure, circular containments are not permitted.
+EModelElement expands EObject by giving the possibility to annotate them (EAnnotation).
 
 An Ecore model contains packages (\texttt{EPackage}). 
 Packages have a namespace URI (\texttt{nsURI}), which can be used to refer to the package in other contexts e.g.\ Viatra graph pattern definition.
-Packages can contain other subpackages, classes (\texttt{EClass}), enumerations (\texttt{EEnum}), and data types (\texttt{EDataType}).
+Packages can contain other subpackages, or classifiers (EClassifier), such as classes (\texttt{EClass}), enumerations (\texttt{EEnum}), and data types (\texttt{EDataType}).
 
 Classes have structural features: references and attributes (\texttt{EStructuralFeature}, \texttt{EReference}, \texttt{EAttribute}); also they have operations (EOperation).
 References and attributes have multiplicity, defining their lower and upper bound is also possible.
@@ -60,8 +58,10 @@ The name of the literal is encapsulated in its EEnumerator instance.
 \section{Metamodel from the case study}
 
 The metamodel of our case study is depicted in \autoref{fig:unified-mm}.
-containment edges are marked by a black diamond at the container object.
-The \texttt{MoDeS3ModelRoot} is the root of the containment hierarchy, only one. Computing units are represented by the \texttt{ComputingModule} class. \texttt{DomainElement} is the base class for all the classes representing an element of the railway systems. \texttt{Train} represents the trains, The railways are consisted of the instances of \texttt{RailRoadElement}. A \texttt{RailRoadElement} divides between a \texttt{Turnout} with \texttt{straight} and \texttt{divergent} track. \texttt{Segments} are simple railway segments with one or two neighbors. A \texttt{connectedTo} reference exists between two rail road elements, if the train can travel from one to the other.
+Containment edges are marked by a black diamond at the container object.
+The \texttt{MoDeS3ModelRoot} is the root of the containment hierarchy, only one exists in the system. Computing units are represented by the \texttt{ComputingModule} class. \texttt{DomainElement} is the base class for all the classes representing an element of the railway systems. \texttt{Train} represents the trains. The railways are consisted of the instances of \texttt{RailRoadElement}. A  \texttt{Turnout} switches between a \texttt{straight} and a \texttt{divergent} track. \texttt{Segments} are simple railway segments with one or two neighbors. A \texttt{connectedTo} reference exists between two rail road elements, if the train is enabled to travel from one to the other, e.g.\ a \texttt{Turnout} has a \emph{connectedTo} reference one of its \texttt{divergent} or \texttt{straight} track and a \emph{connectedTo} reference to its narrowing end.
+
+\todo{ide valami kis ábrát is rakhatunk}
 
 \begin{figure}[H]
 	\begin{center}

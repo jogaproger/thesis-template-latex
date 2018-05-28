@@ -1,15 +1,14 @@
 %----------------------------------------------------------------------------
 \chapter{\bevezetes}
 %----------------------------------------------------------------------------
-In this section the concepts of this paper are overviewed. 
 
 \section{Runtime verification of CPSs}
 Cyber-physical systems (CPS) \cite{Krupitzer2015,Nielsen2015,Sztipanovits2012}  are systems built of physical and computing units cooperating with each other.
 Cyber-physical systems are used in various contexts. 
 Factories, logistics and energy systems can utilize computers to improve quality, provide monitoring features, and ensure safety for them.
 
-%As cyber-physical systems are widely used in critical environments, ensuring their safe operation is inevitable: their fault can lead to enormous financial loss, environmental damages, or even death ofaltoug people.
-Design-time checking may solve some of the problems, but the physical component of the CPS makes them less feasible to formal model checking, as the state space of the physical worlds is practically infinite and is less expectable.
+As cyber-physical systems are widely used in critical environments, ensuring their safe operation is inevitable: their fault can lead to enormous financial loss, environmental damages, or even death of people.
+Design-time checking may solve some of these problems, but the physical components of the CPS makes formal model checking less feasible, as the state space of the physical worlds is practically infinite and is less expectable.
 Another method is runtime verification \cite{fasecikk}: although we cannot prepare the system to avoid all of the problems, we can observe its state and detect if some errors occur and execute safety protocols to avoid harm. 
 
 
@@ -22,25 +21,23 @@ Monitoring components do not have to be programmed manually but can be generated
 I use the pronoun we to refer to my supervisors and me. 
 The following points are my contribution to the topic:
 \begin{itemize}
-	\item I extended the local search based algorithm to work on distributed models on multiple computers,
-	\item I implemented 
-	\item I evaluated the framework.
+	\item I extended the local search based algorithm to work on distributed models on multiple computers.
+	\item I extended the code generator in \cite{doczi} to be applicable for models distributed to different computers. 
+	\item I measured and evaluated the performance of the developed framework.
 \end{itemize}
 	
-	
 
-
-In Chapter 2, the motivating example is presented, which will be useful to show how the concepts of this thesis are materialized in practice.
-In Chapter 3, I show the technologies we used in the framework.
-In Chapter 4, preliminaries are expounded to clarify the used terms and concepts and give some background knowledge needed to understand the framework.
+Chapter 2 presents the motivating example, which will be useful later to show how the concepts of this thesis are materialized in practice.
+In Chapter 3, I summarize the technologies we used in the framework.
+In Chapter 4, preliminaries are expounded to clarify the used terms and concepts and give some background knowledge needed to understand the framework. I also present the related work in the relevant topics.
 Chapter 5 is an overview of the framework, its structure, and the approach it uses.
 Chapter 6 is about domain modeling the system in Eclipse Modeling Framework.
 Chapter 7 is about how graph queries can be defined using Viatra Query Language. It also shows some examples from the framework for the easier understanding of graph queries.
 In Chapter 8 shows how we generate the model handling code from the domain model of the system.
-In Chapter 9 shows how graph pattern is compiled into monitoring code and what other artifacts are generated for 
+In Chapter 9 shows how graph pattern is compiled into monitoring code and what other artifacts are generated. 
 Chapter 10 shows how the generated artifacts work at runtime. 
-In Chapter 11 we measure and evaluate the framework's performance.
-
+In Chapter 12 we measure and evaluate the framework's performance.
+Chapter 13 concludes the thesis.
 \todo{Marci komment: ezt a végére hagyni és
 runtime models and updates
 graph based approach that are well-known in design time tools

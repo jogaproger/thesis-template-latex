@@ -2,17 +2,19 @@
 
 \todo{Újracsinálni ezt az egészet, ez így egy okádék}
 
-The target of this work is the runtime verification of distributed CPS systems. As a motivating example, the MoDeS3~\cite{modes3} demonstrator platform is used. 
+The aim of this work is the runtime verification of distributed CPS systems. As motivating example, the MoDeS3 demonstrator platform is used. 
 
- MoDeS3 stands for Model-based Demonstrator for Smart and Safe Systems. Its main goal is to demonstrate the many cool and innovative ways in which open source modeling tools can be used for systems development in the age of Internet-of-Things.
+ MoDeS3 stands for Model-based Demonstrator for Smart and Safe Systems~\cite{modes3} . Its main goal is to demonstrate how open source modeling tools can be used for systems development in the age of Internet-of-Things.
  
- The case study is a railway system: users can control trains arbitrarily as long as it is not dangerous. Accidents and dangerous situations are detected using sensors embedded into the track: they sense the trespass of the trains and send this information to the controllers. It is important to note that this is just local information, so we have to ensure that it will be shared between the components. The system employs six BeagleBone Black (BBB) embedded computers to run the safety logic, configured as a distributed system, where each BBB is responsible for some track sections.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{figures/modes.png}
 	\end{center}
 \end{figure}
+ 
+ The case study is a railway system: users can control trains arbitrarily as long as it is not dangerous. Accidents and dangerous situations are detected using sensors embedded into the track: they sense the trespass of the trains and send this information to the controllers. It is important to note that this is just local information, so we have to ensure that it will be shared between the components. The system employs six BeagleBone Black (BBB) embedded computers to run the safety logic, configured as a distributed system, where each BBB is responsible for some track sections.
+
 
 \pagebreak
 We use information from sensors perceiving the system's physical state to deduce if the state of the system is incorrect and/or dangerous. This is done by creating a structural model for the system and updating it based on sensor data coming from sensors. This model is graph based and we use graph pattern matching to find model parts indicating errors in the physical system.

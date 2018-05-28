@@ -9,18 +9,8 @@
 %%%%
 
 After the model handling code is generated, the user of the framework can build and maintain the live model at runtime. 
-Still to use find matches for graph patterns, we need additional components to be generated. 
+To find matches for graph patterns, we need additional components to be generated. 
 In this chapter, we show the workflow of query code generation in the framework. 
-
-
-\begin{figure}[H]
-	\begin{center}
-		\includegraphics[width=\textwidth]{figures/query-compilation-workflow.pdf}
-		\caption{Query compilation workflow}
-		\label{figure:query-compile-workflow}
-	\end{center}
-\end{figure}
-
 
 \section{Overview}
 
@@ -45,12 +35,22 @@ and generate the \cpp{} files from them.
 \end{enumerate}
 
 
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/query-compilation-workflow.pdf}
+		\caption{Query compilation workflow}
+		\label{figure:query-compile-workflow}
+	\end{center}
+\end{figure}
+
+
+
 
 \section{PSystem representation}
 
 
 The VQL file is loaded into a PatternModel. 
-The framework does not use this representation, but passes it to \viatra, which creates its own representations of it called PSystem. \cite{psystem}. 
+The framework does not use this representation, but passes it to \viatra, which creates its own representations of it called PSystem~\cite{psystem}. 
 
 
 \begin{figure}[H]
@@ -61,11 +61,11 @@ The framework does not use this representation, but passes it to \viatra, which 
 	\end{center}
 \end{figure}
 
-The structure of PSystem representation is shown on \autoref{fig:psystem}. 
+The structure of PSystem representation is depicted in \autoref{fig:psystem}. 
 As their implementation is hidden behind interfaces, most of the refrences means getter functions (In Xtend, getter functions can be used with field access syntax like \csharp{} properties). 
 Graph patterns are represented by a PQuery. 
 A PQuery has a parameter list. 
-The most important attribute of parameters are its names. 
+Parameters have a name.
 A PQuery consists of a PDisjunction, which consists of a set of PBodies. 
 PDisjunctions play role in Query rewriting, where the bodies of a PQuery gets optimized, or changed other ways.
 PBody consists of PConstraints. 
@@ -87,7 +87,7 @@ First the types of the variables must be infered.
 \begin{enumerate}
 	\item 
 	First, we collect all the type constraints, that the variable must satisfy.
-	We do this, by collecting all the variables that are the same as the variable( via equality constraints ), 
+	We do this, by collecting all the variables that are the same as the variable (via equality constraints), 
 	then collect the constraints refering to them.
 	From this we can create the set of candidate types.
 	\item
@@ -98,9 +98,9 @@ First the types of the variables must be infered.
 		\item
 		If all the types are EClass types, then we select the most general class, that is compatible (extends it or is the same) of all the classes and choose that.
 		If we cannot choose such EClass, or there are multiple classes that satisfies this, then the type inference is failed.
-		A case for this is depicted on \autoref{fig:multiple-inheritance-problem}: if a variable's type is restricted as \texttt{A} and \texttt{B}, we cannot choose between \texttt{X} and \texttt{Y}
+		A case for this is depicted on \autoref{fig:multiple-inheritance-problem}: if a variable's type is restricted as \texttt{A} and \texttt{B}, we cannot choose between \texttt{X} and \texttt{Y}, but this can be avoided by designing appropriate metamodels.
 		\item
-		In other cases (e.g. both of data types and class types is used) the type inference is failed
+		In other cases (e.g. both of data types and class types is used) the type inference is failed.
 	\end{itemize}
 \end{enumerate}
 
@@ -108,7 +108,7 @@ First the types of the variables must be infered.
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.4\textwidth]{figures/multiple-inheritance-problem.pdf}
-		\caption{One of the problems with type inference in case of multiple inheritance}
+		\caption{One of the problematic casse of type inference}
 		\label{fig:multiple-inheritance-problem}
 	\end{center}
 \end{figure}
@@ -118,8 +118,7 @@ For this, we collect the variables that represent this parameter from each body.
 As the parameters value can be any of the variable, we choose the type, that generalizes them.
 If no such type exists, the inference of the parameter type is failed.
 
-We also maintain additional information in our representation. 
-Bodies also maintain the relationship between variables and parameters. 
+We also maintain additional information in our representation, such as bodies maintaining the relationship between its variables and the parameters of the pattern. 
 In PSystem, this information is not directly available, parameters and variables need to be matched by name.
 
 \section{Search plan calculation}
@@ -135,7 +134,7 @@ After flattening and normalization, we need to create the search plan for each b
 
 For this, we use the local search planner of \viatra{}.
 This planner takes a pattern and a cost function, then creates a permutation of constraints that minimizes the cost function. 
-The cost function gives an approximated cost of applying a constraint based on the variables bound before the application and other information\footnote{One of the used detail is the statistics on the instance model: As it can only be available at runtime, we can't use these at design time}. 
+The cost function gives an approximated cost of applying a constraint based on the variables bound before the application and other information\footnote{One of the used detail is the statistics on the instance model: as it can only be available at runtime, we can't use these at design time}. 
 After this permutation is achieved, then search operations will be created by mapping the constraints to them considering their position.
 
 For the different types of constraint applications we use the following search operations. We also give the basic search operation a name to use them later in the examples.
@@ -153,19 +152,22 @@ We apply a type constraint the following way:
 \item If the variable is unbound, we need to iterate over the instances of the type and follow the algorithm, we denote this ExtendInstanceOf(Var, Type) ).
 \end{itemize}
 
-
-\subsubsection{Reference and attribute (Structural feature) constraint}
+\newpage
+\subsubsection{Reference and attribute constraint}
 
 Reference and attribute relations are called structural features.
 We apply the constraint of a structural feature the following way:
 \begin{itemize}
-	\item If the source and target variable is bound too, then we just checks, whether the constraint is satisfied by those constraint. 
+	\item 
+	If the source and target variable is bound too, then we just checks, whether the constraint is satisfied by those constraint.
+	\newline CheckNavigation(from, to, structural feature)
 	
-	\mbox{(CheckNavigation(from, to, structural feature))}
-	\item If the source variable is bound and the target is unbound, then we extend along using the source variable for all its elements (or single element, if it does not have multiplicity). 
+	\item 
+	If the source variable is bound and the target is unbound, then we extend along using the source variable for all its elements (or single element, if it does not have multiplicity). 
+	\newline ExtendNavigation(from, to, structural feature)
 	
-	\mbox{(ExtendNavigation(from, to, structural feature))}
-	\item If the target variable is bound and the source is unbound, then we check, if the structural feature is a reference having an opposite reference. 
+	\item 
+	If the target variable is bound and the source is unbound, then we check, if the structural feature is a reference having an opposite reference. 
 	\begin{itemize}
 		\item If it is, then we can navigate along the opposite reference, so we can use it to extend to the source variable. 
 		
@@ -175,7 +177,9 @@ We apply the constraint of a structural feature the following way:
 		ExtendInstanceof(type of src, src), CheckNavigation(src, target). 
 	\end{itemize}
 
-	\item If both of  target variable and the source is unbound, then we use the next 2 search operation: ExtendInstanceof(type of src, src), ExtendNavigation(src, target)
+	\item If both of the soruce variable and the target variable is unbound, then we use the next 2 search operation: 
+	\newline ExtendInstanceof(type of src, src)
+	\newline ExtendNavigation(src, target)
 
 \end{itemize}
 
@@ -187,6 +191,7 @@ We only apply these constraints, when all the referred variables are bound, so w
 	\item Negative pattern application $\rightarrow{}$ NegativePatternCheck(pattern, $v_1$, $v_2$, \dots{} )
 	\item Transitive closure $\rightarrow{}$ BinaryTransitiveClosureCheck(pattern, $v_1$, $v_2$).
 \end{itemize}
+We check these constraints at runtime by using their generated code.
 
 \subsubsection{Count pattern matches}
 
@@ -196,19 +201,20 @@ We choose the search operation based on this variable.
 
 \begin{itemize}
 	\item If this variable is bound, then we create a check operation: 
-	CheckPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
+	\newline CheckPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
 	\item If this variable is not bound, then we create an extend operation: 
-	ExtendPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
+	\newline ExtendPatternMatchCounter(countVar, pattern, $v_1$, $v_2$, \dots{})
 \end{itemize}
 
 
 \subsubsection{Inequality}
-Inequality is only supported as a check operation: CheckInequality(x, y)
+Inequality is only supported as a check operation:
+\newline CheckInequality(x, y)
 
 
 \subsection{Expanding the plan for distributed evaluation}
-Now the sequence of search operation can be used to find the matches of a pattern on a single computer, but in a distributed setup, we need additional steps to make the plan correct.
-The following search operations can cause problems in a distributed setup:
+Now the sequence of search operation can be used to find the matches of a pattern on a single computer, but in a distributed setup, we need additional operations to make the plan correct.
+The following search operations can cause problems in a distributed setup if not handled correctly:
 \begin{itemize}
 	\item CheckNavigation	
 	\item ExtendNavigation
@@ -216,10 +222,31 @@ The following search operations can cause problems in a distributed setup:
 \end{itemize}
 
 CheckNavigation and ExtendNavigation need the source object to be available at the computing unit, because references and attributes are stored on local objects.
-ExtendInstanceOf needs to expa
+We solve this problem by inserting a distribution operation (TargetedDistribution(Var)), which checks whether the source variable is local and if not, execution is transmitted to the computing module containing the value of the variable.
 
-\subsubsection{Example for search plan creation on a pattern }
-\todo{examplet csinálni ide}
+To make ExtendInstanceOf capable of extending to all the instances of a type, we insert a distribution operation before it, which transmits the execution to all of the computing modules (GlobalDistribution). After that, ExtendInstanceOf can extend the local instances at all of the computing modules.
+
+For example, below is a distributed local search plan for pattern \texttt{closeTrains}, where the original plan is the same, but without the distribution operations (marked by red).
+
+\begin{enumerate}
+	\begingroup\color{red} 
+	\item GlobalDistribution
+	\endgroup
+	\item ExtendInstanceOf(t1, Train)
+	\item ExtendNavigation(t1, start, Train.on)
+	\begingroup\color{red} 
+	\item TargetedDistribution(start)
+	\endgroup
+	\item ExtendNavigation(start, middle, RailRoadElement.connectedTo)
+	\begingroup\color{red} 
+	\item TargetedDistribution(middle)
+	\endgroup
+	\item ExtendNavigation(middle, end, RailRoadElement.connectedTo)
+	\begingroup\color{red} 
+	\item TargetedDistribution(end)
+	\endgroup
+	\item ExtendNavigation(end, t2, RailRoadElement.train)	
+\end{enumerate}
 
 
 \subsection{Additional optimization}
@@ -233,7 +260,7 @@ There are some cases, where helper patterns are simple, and used to define simpl
 In this case, evaluationg the subquery is not always the most efficient method, sometimes these can be replaced by simple search operations:
 
 \paragraph{Reference Pattern}
-We use the phrase \emph{reference pattern} for a pattern with 2 parameters if its only constraint is that a reference exist between the two parameters, eg.:
+We use the phrase \emph{reference pattern} for a pattern with 2 parameters if it only contains a reference constraint between the two parameter, e.g.
 \begin{lstlisting}[language = vql]
 private pattern connected(a : RailRoadElement, b : RailRoadElement){
 	RailRoadElement.connectedTo(a,b);
@@ -256,34 +283,41 @@ Instead of checking wether a reference pattern matches we can simply create a se
 neg find connected(a, _);
 \end{lstlisting}
 
-\todo{Lesz itt egy összefoglaló táblázat ezekről mindről}
+\todo{Lesz itt egy összefoglaló táblázat ezekről mindről (vagy nem....)}
 
 
 \subsubsection{Filter unnecessary operations, checks}
 As the original plan is generated by the localsearch planner of \viatra{}, there can be redundant operations, which can be ommited. This includes:
 
 \begin{itemize}
-	\item Check operation -- The generated code is strongly typed, so we don't need type checks in most cases, unlike in the Java implementation, where the tuples contains plain java objects with unknown types.
+	\item Check operation -- The generated code is strongly typed, so we don't need type checks in most cases, unlike in the Java implementation, where the matching frame contains plain Java objects with unknown types. We optimize out type constraints which is inferred by the types of the variables, or other previously enforced constraints.
 	
-	\item Distribution operations -- We also need to detect redundant distribution operations, this can happen, when we know, that a certain object is local after the previous operation.
+	\item Distribution operations -- We also need to detect redundant targeted distribution operations. A targeted distribution operation can be redundant,  when we know that a certain object is local after the previous operation. e.g. consider the following sequence of operations:
+	\begin{enumerate}
+		\item TargetedDistribution(Src)
+		\item ExtendNavigation(Src, Trg1, Reference1)
+		\begingroup\color{red} 
+		\item TargetedDistribution(Src)
+		\endgroup
+		\item ExtendNavigation(Src, Trg2, Reference2)
+	\end{enumerate}
+	Operation 3 here is redundant, as after executing the first one, execution will only continue in the computing unit where the value of Src is local.
+	
 \end{itemize}
-
-
 
 \section{\protect\cpptt{} code generation}
 
 
-
 \subsection{Generated code structure}
 
-The structure of the generated code is depicted on \autoref{fig:generated-code-structure-perpattern}.
-For each pattern we generate a \texttt{Matcher} class.
-This class contains the methods for query execution.
-We also generate a \texttt{Match} class which is a data class for pattern match.
-A \texttt{MatchSet} class is also generated which holds a subresult of a query, which is a collection of matches.
-We generate \texttt{Frame} classes, which can holds variable bindings. 
-Since different parameter-bound patterns and different bodies of a pattern can contain a different set of variables, we generate multiple frame class for a pattern.
-
+The generated classes for a pattern is depicted in \autoref{fig:generated-code-structure-perpattern}.
+For each pattern we generate a \texttt{Query} class, that contains binding classes as nested classes. 
+A query is identified by a platform independent unique id (\texttt{queryID}).
+For each pattern we generate a \texttt{Matcher} class that contains the methods for query execution for each.
+We also generate a \texttt{Match} class which is a data class for pattern matches.
+A \texttt{MatchSet} class is also generated which holds sub results of a query.
+We generate \texttt{Frame} classes, which can hold variable bindings. 
+Since different pattern bodies of different parameter-bound queries can contain a different set of variables, multiple frame classes are generated.
 
 \begin{figure}[h]
 	\begin{center}
@@ -294,7 +328,29 @@ Since different parameter-bound patterns and different bodies of a pattern can c
 \end{figure}
 
 
+\subsubsection{Frame}
+
+The variables of a body are stored in a data structure called the matching frame.
+We generate serializer and deserializer methods, which depends on Protobuf.
+The message structure (.proto file) is also generated alongside these structures.
+
+\subsubsection{Match, MatchSet}
+
+These classes are used to store graph pattern matches. Match is a singular match, which is practically the Frame projected to the parameters, while MatchSet is a collection for matches.
+
+\subsubsection{Query code generation}
+
+The completed and optimized plan are used to generate \cpp{} code. 
+Two main methods can be used to run local search plan in case of generated code. 
+One is to generate the plan as a data structure and create an interpreter that uses the plan to find matches. 
+The other is to generate the code directly from the plan. 
+The first method is good if we want to change the plan at runtime, but the interpreter itself introduces overhead, causing performance to be slower.
+We implemented and measured the performance for both of these methods.
+
 \subsection{Integrating with the framework}
+
+\autoref{fig:generated-code-structure-wholesome} shows how the framework integrates the generated codes. References and dependencies of red color means, that it holds for only the template specialization, where the generated class and the \texttt{BindClass} parameter is generated for the same query. \texttt{QueryService} class has an instance on all the computing modules. When a user invokes a query, \texttt{QueryRunner} instances are created with the same \texttt{BindClass} as the query, and the user gets back a \texttt{QueryFuture} instance that can be used to access the result when it is available. 
+\texttt{QueryRunner} class uses the appropriate Matcher based on its \texttt{BindClass} parameter to run search operations locally. Distribution operators are executed via the QueryService instance
 
 \begin{figure}[h]
 	\begin{center}
@@ -304,31 +360,10 @@ Since different parameter-bound patterns and different bodies of a pattern can c
 	\end{center}
 \end{figure}
 
-\subsection{Query code generation}
 
-The completed and optimized plan are used to generate \cpp{} code. 
-Two main methods can be used to run local search plan in case of generated code. 
-One is to generate the plan as a data structure and create an interpreter that uses the plan to find matches. 
-The other is to generate the code directly from the plan. 
-The first method is good if we want to change the plan at runtime, but the interpreter itself introduces an overhead, causing performance to be slower.
-We implemented and measured the performance for both of them.
 
 \todo{Itt konkrétan a kódgenerálás részleteibe bele lehet menni, ha lesz idő}
 
-
-\subsection{Generating helper data structures}
-
-\subsubsection{Matching frame, frame vector}
-
-The variables of a body are stored in a data structure called the matching frame.
-We also generate a collection for frames called frame vector used in distributed behavior of the graph pattern matcher.
-We generate serializer and deserializer methods, which uses protobuf.
-The message structure (.proto file) is also generated alongside these structures.
-\todo{Konkrétan megcsinálni, hogy hogy generálódnak az osztályok, adattagok, névválasztás, XXXMAtchingFrame0, stb}
-
-\subsubsection{Match, MatchSet}
-
-These are used to store graph pattern matches. Match is a singular match (Practically it is the same as the Matching Frame projected to the parameters), while MatchSet is a collection for matches.
 
 
 

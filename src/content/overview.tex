@@ -36,7 +36,7 @@ We use these plans to generate the source code of the monitoring components.
 At runtime, we rely on the generated monitor code and the generated model code. 
 We create the nodes of the live model, create the references/edges between them and give the values of the attributes of the objects. 
 With the physical world changing we update the objects to reflect the current state of the system. \todo{hivatkozasok a kesobbi reszekre, ahol ezekrol tobb szo esik}
-On this model, we run the monitoring code to find matches for the patterns in the model. 
+On this model, we run the monitoring components to find matches for the patterns in the model. 
 If a pattern match occurs, we find the model elements that conform the pattern, thus we can locate the problems in the model, representing the cyber-physical system.
 
 
@@ -64,3 +64,6 @@ We also generate the corresponding DDS topics, as DDS is used to notify computin
 
 From the VQL files, we parse the graph patterns and generate the code able to execute them.
 Query execution depends on serialization/deserialization service provided by protobuf, so we also create the corresponding protobuf messages and compile them into \cpp{} code.
+
+The generated code depends on the additional utilities contained by the Framework library. The user can depend of these resources while implementing the components of the CPS.
+
